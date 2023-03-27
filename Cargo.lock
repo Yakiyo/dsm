@@ -84,6 +84,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "dsm"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "ureq",
+]
+
+[[package]]
 name = "errno"
 version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -262,14 +270,6 @@ dependencies = [
  "untrusted",
  "web-sys",
  "winapi",
-]
-
-[[package]]
-name = "rust-codespaces"
-version = "0.1.0"
-dependencies = [
- "clap",
- "ureq",
 ]
 
 [[package]]

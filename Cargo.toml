@@ -1,5 +1,5 @@
 [package]
-name = "rust-codespaces"
+name = "dsm"
 version = "0.1.0"
 authors = ["Yakiyo"]
 edition = "2018"
