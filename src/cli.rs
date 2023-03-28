@@ -1,28 +1,28 @@
-use clap::Parser;
+use clap::{Parser, Subcommand};
 use crate::commands;
 use crate::commands::command::Command;
 
-#[derive(clap::Parser, Debug)]
+/// A fast and simple manager for the Dart SDK
+#[derive(Parser, Debug)]
+#[command(author, version, about)]
+pub struct Cli {
+    #[command(subcommand)]
+    pub subcommand: SubCommand,
+}
+
+#[derive(Subcommand, Debug)]
 pub enum SubCommand {
     /// Install a specific version of the Dart SDK
     #[clap(name = "install")]
     Install(commands::install::Install),
 }
 
-impl SubCommand {
-    pub fn handle(self) {
-        match self {
-            SubCommand::Install(c) => c.handle(),
+impl Cli {
+    pub fn handle_sub(self) {
+        match self.subcommand {
+            SubCommand::Install(e) => e.handle(),
         }
     }
-}
-
-/// Simple and Fast Dart SDK manager
-#[derive(clap::Parser, Debug)]
-#[clap(name = "dsm", version = env!("CARGO_PKG_VERSION"), bin_name = "dsm", author = "Yakiyo")]
-pub struct Cli {
-    #[clap(subcommand)]
-    pub sub: SubCommand,
 }
 
 pub fn parse() -> Cli {

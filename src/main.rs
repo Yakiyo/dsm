@@ -9,5 +9,5 @@ mod cli;
 fn main() {
     let args = cli::parse();
     println!("{:#?}", args);
-    args.sub.handle();
+    args.handle_sub();
 }
