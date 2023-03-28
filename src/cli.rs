@@ -1,12 +1,20 @@
 use clap::Parser;
-
 use crate::commands;
+use crate::commands::command::Command;
 
 #[derive(clap::Parser, Debug)]
 pub enum SubCommand {
     /// Install a specific version of the Dart SDK
     #[clap(name = "install")]
     Install(commands::install::Install),
+}
+
+impl SubCommand {
+    pub fn handle(self) {
+        match self {
+            SubCommand::Install(c) => c.handle(),
+        }
+    }
 }
 
 /// Simple and Fast Dart SDK manager
