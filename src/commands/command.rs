@@ -1,9 +1,8 @@
 pub trait Command: Sized {
-    type Error: std::error::Error;
-    fn run(self) -> Result<(), Self::Error>;
+    fn run(self) -> Result<(), String>;
 
-    fn catch(err: Self::Error) {
-        let err_s = format!("{err}");
+    fn catch(err: String) {
+        let err_s = format!("{:?}", err);
         eprintln!("Error: {}", err_s);
         std::process::exit(1);
     }
