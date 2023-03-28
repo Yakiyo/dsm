@@ -4,10 +4,9 @@ use crate::commands;
 
 #[derive(clap::Parser, Debug)]
 pub enum SubCommand {
-
     /// Install a specific version of the Dart SDK
     #[clap(name = "install")]
-    Install(commands::install::Install)
+    Install(commands::install::Install),
 }
 
 /// Simple and Fast Dart SDK manager
