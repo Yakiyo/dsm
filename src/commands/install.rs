@@ -14,6 +14,12 @@ pub struct Install {
 
 impl Command for Install {
     fn run(self) -> Result<(), String> {
+        let channel = if self.channel.is_none() {
+            "stable".to_string()
+        } else {
+            self.channel.unwrap()
+        };
+        println!("{channel}");
         Ok(())
     }
 }
