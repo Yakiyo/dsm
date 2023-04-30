@@ -1,4 +1,5 @@
 mod cli;
+mod arch;
 /// DSM - Dart SDK Manager
 ///
 /// A version manager for the dart sdk, written in rust
