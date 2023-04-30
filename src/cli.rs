@@ -2,10 +2,32 @@ use crate::commands;
 use crate::commands::command::Command;
 use clap::{Parser, Subcommand};
 
-/// A fast and simple manager for the Dart SDK
+/// A fast and simple version manager for the Dart SDK
 #[derive(Parser, Debug)]
-#[clap(author, version, about)]
+#[clap(version, about)]
 pub struct Cli {
+    /// Override the architecture to be used. Defaults to the system arch.
+    #[clap(
+        long,
+        env = "DSM_ARCH",
+        default_value = std::env::consts::ARCH,
+        global = true,
+        hide_env_values = true,
+        hide_default_value = true
+    )]
+    pub arch: String,
+
+
+    /// The root directory of dsm installations.
+    #[clap(
+        long = "dsm-dir",
+        env = "DSM_DIR",
+        global = true,
+        hide_env_values = true
+    )]
+    pub base_dir: Option<std::path::PathBuf>,
+
+    /// Subcommand
     #[clap(subcommand)]
     pub subcommand: SubCommand,
 }
