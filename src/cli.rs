@@ -17,7 +17,6 @@ pub struct Cli {
     )]
     pub arch: String,
 
-
     /// The root directory of dsm installations.
     #[clap(
         long = "dsm-dir",
