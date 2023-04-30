@@ -7,6 +7,5 @@ mod commands;
 
 fn main() {
     let args = cli::parse();
-    println!("{:#?}", args);
     args.handle_sub();
 }
