@@ -1,3 +1,5 @@
+use crate::cli::DsmConfig;
+
 use super::Command;
 use clap::Args;
 
@@ -16,7 +18,7 @@ pub struct Install {
 }
 
 impl Command for Install {
-    fn run(self) -> Result<(), String> {
+    fn run(self, config: DsmConfig) -> Result<(), String> {
         let channel = if self.version.ends_with("beta") {
             CHANNELS::Beta
         } else if self.version.ends_with("dev") {
@@ -24,7 +26,7 @@ impl Command for Install {
         } else {
             CHANNELS::Stable
         };
-        println!("{:#?}, {:#?}", channel, std::env::consts::ARCH);
+        println!("{:#?}, {:#?}", channel, config.arch);
         Ok(())
     }
 }
