@@ -5,5 +5,5 @@ authors = ["Yakiyo"]
 edition = "2018"
 
 [dependencies]
-clap = { version = "4.1.13", features = ["derive"] }
+clap = { version = "3.2.23", features = ["derive"] }
 ureq = { version = "2.6.2", features = ["json"] }
