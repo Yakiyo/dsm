@@ -1,4 +1,4 @@
-use super::command::Command;
+use super::Command;
 use clap::Args;
 
 /// Possible channels for the Dart SDK
@@ -8,16 +8,11 @@ enum CHANNELS {
     Beta,
     Dev,
 }
-// pub const _FLAVOURS: [&str; 2] = ["release", "raw"];
 
 #[derive(Args, Debug, Default)]
 pub struct Install {
     /// The version to install. Use `latest` to indicate the latest release
     pub version: String,
-
-    /// Install latest version
-    #[clap(long, conflicts_with_all = &["version"])]
-    pub latest: bool,
 }
 
 impl Command for Install {
@@ -29,7 +24,7 @@ impl Command for Install {
         } else {
             CHANNELS::Stable
         };
-        println!("{:#?}", channel);
+        println!("{:#?}, {:#?}", channel, std::env::consts::ARCH);
         Ok(())
     }
 }

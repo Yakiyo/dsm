@@ -1,11 +1,21 @@
 use crate::commands;
-use crate::commands::command::Command;
+use crate::commands::Command;
 use clap::{Parser, Subcommand};
 
 /// A fast and simple version manager for the Dart SDK
 #[derive(Parser, Debug)]
 #[clap(version, about)]
 pub struct Cli {
+    #[clap(flatten)]
+    pub config: DsmConfig,
+
+    /// Subcommand
+    #[clap(subcommand)]
+    pub subcommand: SubCommand,
+}
+
+#[derive(Parser, Debug)]
+pub struct DsmConfig {
     /// Override the architecture to be used. Defaults to the system arch.
     #[clap(
         long,
@@ -25,10 +35,6 @@ pub struct Cli {
         hide_env_values = true
     )]
     pub base_dir: Option<std::path::PathBuf>,
-
-    /// Subcommand
-    #[clap(subcommand)]
-    pub subcommand: SubCommand,
 }
 
 #[derive(Subcommand, Debug)]
