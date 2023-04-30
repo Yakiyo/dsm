@@ -47,7 +47,7 @@ pub enum SubCommand {
 impl Cli {
     pub fn handle_sub(self) {
         match self.subcommand {
-            SubCommand::Install(e) => e.handle(),
+            SubCommand::Install(e) => e.handle(self.config),
         }
     }
 }

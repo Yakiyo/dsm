@@ -1,3 +1,5 @@
+use crate::cli::DsmConfig;
+
 pub trait Command: Sized {
     fn run(self) -> Result<(), String>;
 
@@ -7,7 +9,7 @@ pub trait Command: Sized {
         std::process::exit(1);
     }
 
-    fn handle(self) {
+    fn handle(self, _config: DsmConfig) {
         match self.run() {
             Ok(()) => (),
             Err(err) => Self::catch(err),
