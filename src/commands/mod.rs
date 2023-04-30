@@ -1,4 +1,5 @@
 use crate::cli::DsmConfig;
+pub mod install;
 
 pub trait Command: Sized {
     fn run(self) -> Result<(), String>;
@@ -16,5 +17,3 @@ pub trait Command: Sized {
         }
     }
 }
-
-pub mod install;
