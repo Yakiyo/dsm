@@ -6,7 +6,7 @@ use clap::Args;
 enum CHANNELS {
     Stable,
     Beta,
-    Dev
+    Dev,
 }
 // pub const _FLAVOURS: [&str; 2] = ["release", "raw"];
 
