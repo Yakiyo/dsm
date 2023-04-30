@@ -4,9 +4,9 @@ use crate::commands::command::Command;
 
 /// A fast and simple manager for the Dart SDK
 #[derive(Parser, Debug)]
-#[command(author, version, about)]
+#[clap(author, version, about)]
 pub struct Cli {
-    #[command(subcommand)]
+    #[clap(subcommand)]
     pub subcommand: SubCommand,
 }
 
