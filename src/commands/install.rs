@@ -1,32 +1,32 @@
-use super::command::Command;
+use crate::cli::DsmConfig;
+
+use super::Command;
 use clap::Args;
-pub const CHANNELS: [&str; 3] = ["stable", "beta", "dev"];
+
+/// Possible channels for the Dart SDK
+#[derive(Debug)]
+enum CHANNELS {
+    Stable,
+    Beta,
+    Dev,
+}
 
 #[derive(Args, Debug, Default)]
 pub struct Install {
     /// The version to install. Use `latest` to indicate the latest release
     pub version: String,
-
-    #[arg(value_parser = is_valid_channel)]
-    /// The channel to install (stable, beta, dev). Defaults to `stable`
-    pub channel: Option<String>,
 }
 
 impl Command for Install {
-    fn run(self) -> Result<(), String> {
-        let channel = if self.channel.is_none() {
-            "stable".to_string()
+    fn run(self, config: DsmConfig) -> Result<(), String> {
+        let channel = if self.version.ends_with("beta") {
+            CHANNELS::Beta
+        } else if self.version.ends_with("dev") {
+            CHANNELS::Dev
         } else {
-            self.channel.unwrap()
+            CHANNELS::Stable
         };
-        println!("{channel}");
+        println!("{:#?}, {:#?}", channel, config.arch);
         Ok(())
     }
 }
-
-fn is_valid_channel(s: &str) -> Result<String, String> {
-    match CHANNELS.contains(&s) {
-        true => Ok(s.to_string()),
-        false => Err(format!("Invalid channel type. Must be one of {}", CHANNELS.join(", ")))
-    }
-} 

@@ -5,9 +5,9 @@
 
 mod commands;
 mod cli;
+mod arch;
 
 fn main() {
     let args = cli::parse();
-    println!("{:#?}", args);
     args.handle_sub();
 }
