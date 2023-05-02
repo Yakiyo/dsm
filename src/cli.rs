@@ -2,6 +2,7 @@ use crate::arch::{platform_arch, Arch};
 use crate::commands;
 use crate::commands::Command;
 use clap::{Parser, Subcommand};
+use home;
 
 /// A fast and simple version manager for the Dart SDK
 #[derive(Parser, Debug)]
@@ -55,4 +56,18 @@ impl Cli {
 
 pub fn parse() -> Cli {
     Cli::parse()
+}
+
+/// Get home dir path
+pub fn home_dir_str() -> String {
+    // return match home::home_dir() {
+    //     Some(p) => p.to_str(),
+    //     None => panic!("Cannot read home directory. Consider manually setting the value of `DSM_DIR`"),
+    // }
+    if let Some(t) = home::home_dir() {
+        if let Some(t) = t.to_str() {
+            return t.to_string();
+        } else {}
+    }
+    panic!("Cannot read home directory. Consider manually setting the value of `DSM_DIR`")
 }
