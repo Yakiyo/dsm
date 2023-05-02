@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_variables)]
 // Some of the code in this file are taken from Schniz/fnm. All credit goes
 // to the contributors of that file
 //
