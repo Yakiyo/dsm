@@ -1,5 +1,6 @@
 use crate::commands;
 use crate::commands::Command;
+use crate::arch::{Arch, platform_arch};
 use clap::{Parser, Subcommand};
 
 /// A fast and simple version manager for the Dart SDK
@@ -20,12 +21,12 @@ pub struct DsmConfig {
     #[clap(
         long,
         env = "DSM_ARCH",
-        default_value = std::env::consts::ARCH,
+        default_value = platform_arch(),
         global = true,
         hide_env_values = true,
         hide_default_value = true
     )]
-    pub arch: String,
+    pub arch: Arch,
 
     /// The root directory of dsm installations.
     #[clap(
