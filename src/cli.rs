@@ -1,6 +1,6 @@
+use crate::arch::{platform_arch, Arch};
 use crate::commands;
 use crate::commands::Command;
-use crate::arch::{Arch, platform_arch};
 use clap::{Parser, Subcommand};
 
 /// A fast and simple version manager for the Dart SDK

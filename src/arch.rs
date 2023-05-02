@@ -37,9 +37,7 @@ pub fn platform_arch() -> &'static str {
 }
 
 // I have no idea wether this is even valid or not. This needs fixing.
-#[cfg(
-    target_arch = "ia32"
-)]
+#[cfg(target_arch = "ia32")]
 pub fn platform_arch() -> &'static str {
     "ia32"
 }
@@ -75,7 +73,6 @@ impl std::str::FromStr for Arch {
             unknown => Err(ArchErr::new(&format!("Unknown arch {unknown}. Please manually set arch with the `DSM_ARCH` env or the `--arch` flag"))),
         }
     }
-
 }
 impl std::fmt::Display for Arch {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
