@@ -52,6 +52,17 @@ pub enum Arch {
     Ia32,
 }
 
+impl Arch {
+    fn to_str(&self) -> &'static str {
+        match self {
+            Arch::Armv7 => "arm",
+            Arch::Arm64 => "arm64",
+            Arch::X64 => "x64",
+            Arch::Ia32 => "ia32",
+        }
+    }
+}
+
 impl std::str::FromStr for Arch {
     type Err = ArchErr;
 
@@ -65,6 +76,11 @@ impl std::str::FromStr for Arch {
         }
     }
 
+}
+impl std::fmt::Display for Arch {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "{}", self.to_str())
+    }
 }
 
 impl Arch {
