@@ -6,6 +6,7 @@
 mod commands;
 mod cli;
 mod arch;
+mod platform;
 
 fn main() {
     let args = cli::parse();
