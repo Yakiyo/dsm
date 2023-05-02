@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_variables)]
 // Some of the code in this file are taken from Schniz/fnm. All credit goes
 // to the contributors of that file
 //
@@ -43,6 +44,7 @@ pub fn platform_arch() -> &'static str {
     "ia32"
 }
 
+#[derive(Debug)]
 pub enum Arch {
     X64,
     Arm64,
@@ -85,5 +87,17 @@ impl ArchErr {
         ArchErr {
             message: msg.to_string(),
         }
+    }
+}
+
+impl std::error::Error for ArchErr {
+    fn description(&self) -> &str {
+        &self.message
+    }
+}
+
+impl std::fmt::Display for ArchErr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.message)
     }
 }
