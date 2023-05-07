@@ -6,9 +6,9 @@ pub fn error(message: &str) {
 }
 
 /// Print warning messae
-pub fn warn(message: &str) {
-    println!("{} {}", Paint::yellow("[WARN]").bold(), message);
-}
+// pub fn warn(message: &str) {
+//     println!("{} {}", Paint::yellow("[WARN]").bold(), message);
+// }
 
 /// Print info message
 pub fn info(message: &str) {
