@@ -75,7 +75,7 @@ impl std::str::FromStr for Arch {
 }
 impl std::fmt::Display for Arch {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "{}", self.to_str())
+        write!(f, "{}", self.to_str())
     }
 }
 
