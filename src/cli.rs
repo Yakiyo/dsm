@@ -1,6 +1,7 @@
 use crate::arch::{platform_arch, Arch};
 use crate::commands;
 use crate::commands::Command;
+use crate::log::error;
 use crate::platform::platform_name;
 use clap::{Parser, Subcommand};
 use std::path;
@@ -66,12 +67,16 @@ pub fn home_dir() -> path::PathBuf {
     let var = match platform_name() {
         "windows" => "UserProfile",
         "linux" | "macos" => "HOME",
-        _ => panic!("Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm"), 
+        _ => {
+            error("Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm");
+            std::process::exit(1);
+        }
     };
 
     let home_path = env::var(var);
     if home_path.is_err() {
-        panic!("Cannot read home directory. Consider manually setting the value of `DSM_DIR`");
+        error("Cannot read home directory. Consider manually setting the value of `DSM_DIR`");
+        std::process::exit(1);
     }
     path::PathBuf::from(home_path.unwrap())
 }

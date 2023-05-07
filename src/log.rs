@@ -16,11 +16,11 @@ pub fn info(message: &str) {
 }
 
 /// Print debug message by passing the arg to the `info` function
-/// 
+///
 /// This will only print them if the `DEBUG` env is set
 pub fn debug(message: &str) {
     use std::env;
-    if env::var("DEBUG").is_ok(){
+    if env::var("DEBUG").is_ok() {
         info(message);
     }
 }
