@@ -1,4 +1,3 @@
-#![allow(dead_code, unused_variables)]
 // Some of the code in this file are taken from Schniz/fnm. All credit goes
 // to the contributors of that file
 //
@@ -82,7 +81,7 @@ impl std::fmt::Display for Arch {
 
 impl Arch {
     /// Default arch, based on the user's system
-    pub fn default() -> Arch {
+    pub fn _default() -> Arch {
         match platform_arch().parse() {
             Ok(t) => t,
             Err(e) => panic!("{}", e.message),
