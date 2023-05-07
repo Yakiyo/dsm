@@ -1,7 +1,8 @@
 use super::Command;
-use crate::cli::DsmConfig;
+use crate::{cli::DsmConfig, log::debug};
 use clap::Args;
 use std::fs;
+use std::path;
 
 /// Possible channels for the Dart SDK
 #[derive(Debug)]
@@ -33,12 +34,22 @@ pub struct Install {
 
 impl Command for Install {
     fn run(self, config: &DsmConfig) -> Result<(), String> {
-        let channel: Channel = self.version.parse().unwrap();
-        let mut home_dir = crate::cli::home_dir();
-        home_dir.push("/.dsm");
+        let _channel: Channel = self.version.parse().unwrap();
+
+        let home_dir: path::PathBuf = [crate::cli::home_dir().to_str().unwrap(), "/.dsm"]
+            .iter()
+            .collect();
+
         let dir = config.base_dir.as_ref().unwrap_or(&home_dir);
-        println!("{:#?}, {}, {:#?}", channel, config.arch, dir);
-        if !dir.exists() {
+
+        if !dir.exists() || !dir.is_dir() {
+            debug(
+                format!(
+                    "Config dir is missing. Creating config dir at \"{}\"",
+                    yansi::Paint::new(dir.display()).bold().underline()
+                )
+                .as_str(),
+            );
             fs::create_dir_all(dir).unwrap();
         }
         println!("{} {} {}", dir.is_dir(), dir.is_file(), dir.exists());
