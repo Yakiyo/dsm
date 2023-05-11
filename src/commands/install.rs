@@ -1,16 +1,11 @@
 use super::Command;
-use crate::{cli::DsmConfig, log::debug};
+use crate::cli::DsmConfig;
+use crate::log::debug;
+use crate::version::Channel;
 use clap::Args;
 use std::fs;
 use std::path;
 
-/// Possible channels for the Dart SDK
-#[derive(Debug)]
-enum Channel {
-    Stable,
-    Beta,
-    Dev,
-}
 
 impl std::str::FromStr for Channel {
     type Err = ();
@@ -36,9 +31,7 @@ impl Command for Install {
     fn run(self, config: &DsmConfig) -> Result<(), String> {
         let _channel: Channel = self.version.parse().unwrap();
 
-        let home_dir: path::PathBuf = [crate::cli::home_dir().to_str().unwrap(), "/.dsm"]
-            .iter()
-            .collect();
+        let home_dir: path::PathBuf = crate::cli::home_dir().as_path().join("/.dsm");
 
         let dir = config.base_dir.as_ref().unwrap_or(&home_dir);
 
@@ -52,7 +45,12 @@ impl Command for Install {
             );
             fs::create_dir_all(dir).unwrap();
         }
+
+        install_dart_sdk();
+
         println!("{} {} {}", dir.is_dir(), dir.is_file(), dir.exists());
         Ok(())
     }
 }
+
+fn install_dart_sdk() {}
