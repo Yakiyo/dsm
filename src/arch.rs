@@ -79,16 +79,6 @@ impl std::fmt::Display for Arch {
     }
 }
 
-impl Arch {
-    /// Default arch, based on the user's system
-    pub fn _default() -> Arch {
-        match platform_arch().parse() {
-            Ok(t) => t,
-            Err(e) => panic!("{}", e.message),
-        }
-    }
-}
-
 #[derive(Debug)]
 pub struct ArchErr {
     pub message: String,
