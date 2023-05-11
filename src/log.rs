@@ -1,24 +1,24 @@
 use yansi::Paint;
 
 /// Print error messae
-pub fn error(message: &str) {
+pub fn error<P: AsRef<str> + std::fmt::Display>(message: P) {
     eprintln!("{} {}", Paint::red("[ERROR]").bold(), message);
 }
 
 /// Print warning messae
-// pub fn warn(message: &str) {
+// pub fn warn<P: AsRef<str> + std::fmt::Display>(message: P) {
 //     println!("{} {}", Paint::yellow("[WARN]").bold(), message);
 // }
 
 /// Print info message
-pub fn info(message: &str) {
+pub fn info<P: AsRef<str> + std::fmt::Display>(message: P) {
     println!("{} {}", Paint::green("[INFO]").bold(), message);
 }
 
 /// Print debug message by passing the arg to the `info` function
 ///
 /// This will only print them if the `DEBUG` env is set
-pub fn debug(message: &str) {
+pub fn debug<P: AsRef<str> + std::fmt::Display>(message: P) {
     use std::env;
     if env::var("DEBUG").is_ok() {
         info(message);
