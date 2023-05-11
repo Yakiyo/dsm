@@ -31,7 +31,13 @@ impl Command for Install {
 
         install_dart_sdk();
 
-        println!("{} {} {}", dir.is_dir(), dir.is_file(), dir.exists());
+        println!(
+            "{} {} {} {}",
+            dir.is_dir(),
+            dir.is_file(),
+            dir.exists(),
+            self.version
+        );
         Ok(())
     }
 }
