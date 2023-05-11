@@ -1,8 +1,12 @@
 use yansi::Paint;
 
+pub fn error_str<P: AsRef<str> + std::fmt::Display>(message: P) -> String {
+    return format!("{} {}", Paint::red("[ERROR]").bold(), message);
+}
+
 /// Print error messae
 pub fn error<P: AsRef<str> + std::fmt::Display>(message: P) {
-    eprintln!("{} {}", Paint::red("[ERROR]").bold(), message);
+    eprintln!("{}", error_str(message));
 }
 
 /// Print warning messae
