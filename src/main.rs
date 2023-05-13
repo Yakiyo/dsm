@@ -8,7 +8,6 @@ mod cli;
 mod commands;
 mod log;
 mod platform;
-mod version;
 
 fn main() {
     yansi::Paint::enable_windows_ascii();
