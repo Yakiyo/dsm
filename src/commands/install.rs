@@ -1,6 +1,6 @@
 use super::Command;
 use crate::cli::DsmConfig;
-use crate::log::debug;
+use crate::debug;
 use clap::Args;
 use dart_semver::Version;
 use std::fs;
@@ -19,13 +19,7 @@ impl Command for Install {
         let dir = config.base_dir.as_ref().unwrap_or(&home_dir);
 
         if !dir.exists() || !dir.is_dir() {
-            debug(
-                format!(
-                    "Config dir is missing. Creating config dir at \"{}\"",
-                    yansi::Paint::new(dir.display()).bold().underline()
-                )
-                .as_str(),
-            );
+            debug!("Config dir is missing. Creating config dir at \"{}\"", yansi::Paint::new(dir.display()).bold().underline());
             fs::create_dir_all(dir).unwrap();
         }
 

@@ -1,7 +1,7 @@
 use crate::arch::{platform_arch, Arch};
 use crate::commands;
 use crate::commands::Command;
-use crate::error;
+use crate::log;
 use crate::platform::platform_name;
 use clap::{Parser, Subcommand};
 use std::path;
@@ -36,6 +36,7 @@ pub struct DsmConfig {
         long = "dsm-dir",
         env = "DSM_DIR",
         global = true,
+        value_name = "dsm-dir",
         hide_env_values = true
     )]
     pub base_dir: Option<std::path::PathBuf>,
@@ -68,14 +69,17 @@ pub fn home_dir() -> path::PathBuf {
         "windows" => "UserProfile",
         "linux" | "macos" => "HOME",
         _ => {
-            error!("Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm");
+            log!("error", "Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm");
             std::process::exit(1);
         }
     };
 
     let home_path = env::var(var);
     if home_path.is_err() {
-        error!("Cannot read home directory. Consider manually setting the value of `DSM_DIR`");
+        log!(
+            "error",
+            "Cannot read home directory. Consider manually setting the value of `DSM_DIR`"
+        );
         std::process::exit(1);
     }
     path::PathBuf::from(home_path.unwrap())
