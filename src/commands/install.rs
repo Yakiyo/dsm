@@ -1,8 +1,8 @@
 use super::Command;
 use crate::cli::DsmConfig;
 use crate::log::debug;
-use dart_semver::Version;
 use clap::Args;
+use dart_semver::Version;
 use std::fs;
 use std::path;
 
