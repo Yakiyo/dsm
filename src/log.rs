@@ -1,12 +1,18 @@
 use yansi::Paint;
 
-pub fn error_str<P: AsRef<str> + std::fmt::Display>(message: P) -> String {
-    return format!("{} {}", Paint::red("[ERROR]").bold(), message);
-}
-
-/// Print error messae
-pub fn error<P: AsRef<str> + std::fmt::Display>(message: P) {
-    eprintln!("{}", error_str(message));
+#[macro_export]
+macro_rules! error {
+    ($fmt:expr, $($arg:expr),*) => {
+        use yansi::Paint;
+        let v = format!("{} ", Paint::red("[ERROR]")).push_str(format!($fmt, $($arg),*).as_str());
+        println!("{v}")
+    };
+    ($fmt:expr) => {
+        use yansi::Paint;
+        let mut v = format!("{} ", Paint::red("[ERROR]"));
+        v.push_str(format!($fmt).as_str());
+        println!("{v}")
+    }
 }
 
 /// Print warning messae
