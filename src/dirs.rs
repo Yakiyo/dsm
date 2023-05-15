@@ -1,8 +1,7 @@
+use crate::platform::platform_name;
 use std::path::PathBuf;
-
+use crate::log;
 use dart_semver::Version;
-
-use crate::cli::home_dir;
 
 /// A struct for the app's config dir
 ///
@@ -11,6 +10,7 @@ use crate::cli::home_dir;
 ///   - installations
 ///     - vX.Y.Z
 ///     - vA.B.C
+#[derive(Debug)]
 pub struct DsmDir {
     pub root: PathBuf,
     pub installation_dir: PathBuf,
@@ -37,9 +37,24 @@ impl std::convert::From<PathBuf> for DsmDir {
     }
 }
 
+impl std::str::FromStr for DsmDir {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(DsmDir::from(s))
+    }
+}
+
 impl std::default::Default for DsmDir {
     fn default() -> Self {
-        DsmDir::from(home_dir())
+        DsmDir::from([home_dir().to_str().unwrap(), ".fnm"].iter().collect::<PathBuf>())
+    }
+}
+
+// TODO: Do it someday
+impl std::fmt::Display for DsmDir {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "[DSM_DIR]")
     }
 }
 
@@ -63,4 +78,35 @@ impl DsmDir {
 
         Ok(())
     }
+}
+
+
+// https://stackoverflow.com/a/25498458/17990034
+/// Get home dir path
+pub fn home_dir() -> PathBuf {
+    use std::env;
+    let var = match platform_name() {
+        "windows" => "UserProfile",
+        "linux" | "macos" => "HOME",
+        _ => {
+            log!("error", "Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm");
+            std::process::exit(1);
+        }
+    };
+
+    let home_path = env::var(var);
+    if home_path.is_err() {
+        log!(
+            "error",
+            "Cannot read home directory. Consider manually setting the value of `DSM_DIR`"
+        );
+        std::process::exit(1);
+    }
+    PathBuf::from(home_path.unwrap())
+}
+
+pub fn default_dir() -> String {
+    let mut p = home_dir();
+    p.push(".fnm");
+    String::from(p.to_str().unwrap())
 }
