@@ -1,11 +1,9 @@
 use super::Command;
 use crate::cli::DsmConfig;
 use crate::debug;
-use crate::dirs::DsmDir;
 use clap::Args;
 use dart_semver::Version;
 use std::fs;
-use std::path;
 
 #[derive(Args, Debug, Default)]
 pub struct Install {

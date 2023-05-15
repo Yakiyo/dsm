@@ -1,7 +1,7 @@
 use crate::arch::{platform_arch, Arch};
 use crate::commands;
 use crate::commands::Command;
-use crate::dirs::{default_dir, DsmDir};
+use crate::dirs::DsmDir;
 use clap::{Parser, Subcommand};
 
 /// A fast and simple version manager for the Dart SDK
