@@ -35,7 +35,7 @@ pub struct DsmConfig {
         env = "DSM_DIR",
         global = true,
         value_name = "dsm-dir",
-        hide_env_values = true,
+        hide_env_values = true
     )]
     pub base_dir: Option<DsmDir>,
 }
@@ -58,4 +58,3 @@ impl Cli {
 pub fn parse() -> Cli {
     Cli::parse()
 }
-

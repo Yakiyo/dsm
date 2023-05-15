@@ -1,7 +1,7 @@
-use crate::platform::platform_name;
-use std::path::PathBuf;
 use crate::log;
+use crate::platform::platform_name;
 use dart_semver::Version;
+use std::path::PathBuf;
 
 /// A struct for the app's config dir
 ///
@@ -47,7 +47,11 @@ impl std::str::FromStr for DsmDir {
 
 impl std::default::Default for DsmDir {
     fn default() -> Self {
-        DsmDir::from([home_dir().to_str().unwrap(), ".fnm"].iter().collect::<PathBuf>())
+        DsmDir::from(
+            [home_dir().to_str().unwrap(), ".fnm"]
+                .iter()
+                .collect::<PathBuf>(),
+        )
     }
 }
 
@@ -79,7 +83,6 @@ impl DsmDir {
         Ok(())
     }
 }
-
 
 // https://stackoverflow.com/a/25498458/17990034
 /// Get home dir path

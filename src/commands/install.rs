@@ -17,7 +17,10 @@ impl Command for Install {
         let dir = &dir.root;
 
         if !dir.exists() || !dir.is_dir() {
-            debug!("Config dir is missing. Creating config dir at \"{}\"", yansi::Paint::new(dir.display()).bold().underline());
+            debug!(
+                "Config dir is missing. Creating config dir at \"{}\"",
+                yansi::Paint::new(dir.display()).bold().underline()
+            );
             fs::create_dir_all(dir).unwrap();
         }
 
