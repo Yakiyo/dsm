@@ -1,6 +1,7 @@
 use super::Command;
 use crate::cli::DsmConfig;
 use crate::debug;
+use crate::dirs::DsmDir;
 use clap::Args;
 use dart_semver::Version;
 use std::fs;
@@ -13,10 +14,9 @@ pub struct Install {
 }
 
 impl Command for Install {
-    fn run(self, config: &DsmConfig) -> Result<(), String> {
-        let home_dir: path::PathBuf = crate::cli::home_dir().as_path().join("/.dsm");
-
-        let dir = config.base_dir.as_ref().unwrap_or(&home_dir);
+    fn run(self, config: DsmConfig) -> Result<(), String> {
+        let dir = config.base_dir.unwrap_or_default();
+        let dir = &dir.root;
 
         if !dir.exists() || !dir.is_dir() {
             debug!("Config dir is missing. Creating config dir at \"{}\"", yansi::Paint::new(dir.display()).bold().underline());
