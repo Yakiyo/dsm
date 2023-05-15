@@ -11,3 +11,10 @@ spinners = "4.1.0"
 ureq = { version = "2.6.2", features = ["json"] }
 yansi = "0.5.1"
 zip = "0.6.5"
+
+# Size optimizations. Reference: https://tauri.app/v1/guides/building/app-size/
+[profile.release]
+panic = "abort" # Strip expensive panic clean-up logic
+codegen-units = 1 # Compile crates one after another so the compiler can optimize better
+lto = true # Enables link to optimizations
+strip = true # Remove debug symbols
