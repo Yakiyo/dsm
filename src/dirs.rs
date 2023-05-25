@@ -84,13 +84,9 @@ impl DsmDir {
     }
 
     pub fn ensure_dirs(&self) -> Result<(), std::io::Error> {
-        use std::ffi::OsStr;
-        let dirs = [self.root, self.current_dir, self.installation_dir];
-        for dir in dirs {
-            if !dir.exists() || !dir.is_dir() {
-                std::fs::create_dir_all::<OsStr>(dir.as_ref());
-            }
-        }
+        std::fs::create_dir_all(&self.root)?;
+        std::fs::create_dir_all(&self.current_dir)?;
+        std::fs::create_dir_all(&self.current_dir)?;
         Ok(())
     }
 }
