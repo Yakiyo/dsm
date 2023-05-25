@@ -14,7 +14,7 @@ impl Command for Install {
         let dir = config.base_dir.unwrap_or_default();
 
         match dir.ensure_dirs() {
-            Ok(_) => {},
+            Ok(_) => {}
             Err(e) => return Err(e.kind().to_string()),
         }
         // if !dir.exists() || !dir.is_dir() {
@@ -27,11 +27,7 @@ impl Command for Install {
 
         install_dart_sdk();
 
-        println!(
-            "{} {}",
-            dir,
-            self.version
-        );
+        println!("{} {}", dir, self.version);
         Ok(())
     }
 }
