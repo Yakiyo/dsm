@@ -1,9 +1,7 @@
 use super::Command;
 use crate::cli::DsmConfig;
-use crate::debug;
 use clap::Args;
 use dart_semver::Version;
-use std::fs;
 
 #[derive(Args, Debug, Default)]
 pub struct Install {
@@ -14,23 +12,24 @@ pub struct Install {
 impl Command for Install {
     fn run(self, config: DsmConfig) -> Result<(), String> {
         let dir = config.base_dir.unwrap_or_default();
-        let dir = &dir.root;
 
-        if !dir.exists() || !dir.is_dir() {
-            debug!(
-                "Config dir is missing. Creating config dir at \"{}\"",
-                yansi::Paint::new(dir.display()).bold().underline()
-            );
-            fs::create_dir_all(dir).unwrap();
+        match dir.ensure_dirs() {
+            Ok(_) => {},
+            Err(e) => return Err(e.kind().to_string()),
         }
+        // if !dir.exists() || !dir.is_dir() {
+        //     debug!(
+        //         "Config dir is missing. Creating config dir at \"{}\"",
+        //         yansi::Paint::new(dir.display()).bold().underline()
+        //     );
+        //     fs::create_dir_all(dir).unwrap();
+        // }
 
         install_dart_sdk();
 
         println!(
-            "{} {} {} {}",
-            dir.is_dir(),
-            dir.is_file(),
-            dir.exists(),
+            "{} {}",
+            dir,
             self.version
         );
         Ok(())
