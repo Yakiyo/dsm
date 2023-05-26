@@ -1,12 +1,12 @@
+use std::error::Error;
 use crate::cli::DsmConfig;
 pub mod install;
 
 pub trait Command: Sized {
-    fn run(self, config: DsmConfig) -> Result<(), String>;
+    fn run(self, config: DsmConfig) -> Result<(), Box<dyn Error>>;
 
-    fn catch(err: String) {
-        let err_s = format!("{:?}", err);
-        eprintln!("Error: {}", err_s);
+    fn catch(err: Box<dyn Error>) {
+        eprintln!("Error: {:?}", err);
         std::process::exit(1);
     }
 
