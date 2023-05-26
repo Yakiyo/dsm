@@ -7,9 +7,9 @@ mod arch;
 mod cli;
 mod commands;
 mod dirs;
+mod http;
 mod log;
 mod platform;
-mod http;
 
 fn main() {
     yansi::Paint::enable_windows_ascii();

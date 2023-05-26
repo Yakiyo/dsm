@@ -1,9 +1,9 @@
-use std::error::Error;
 use super::Command;
-use crate::{arch::Arch, cli::DsmConfig, platform::platform_name, dirs::DsmDir};
+use crate::{arch::Arch, cli::DsmConfig, dirs::DsmDir, platform::platform_name};
 use clap::Args;
 use dart_semver::Version;
 use spinners::{Spinner, Spinners};
+use std::error::Error;
 
 #[derive(Args, Debug, Default)]
 pub struct Install {
@@ -26,7 +26,7 @@ impl Command for Install {
             format!("Downloading Dart SDK {}", self.version),
         );
 
-        install_dart_sdk(&self.version, &config ,&mut sp)?;
+        install_dart_sdk(&self.version, &config, &mut sp)?;
 
         sp.stop_and_persist("✔", "Downloaded Dart sdk".into());
 
@@ -35,7 +35,11 @@ impl Command for Install {
 }
 
 /// Install dart sdk
-fn install_dart_sdk(_version: &Version, _config: &DsmConfig, _sp: &mut Spinner) -> Result<(), Box<dyn Error>> {
+fn install_dart_sdk(
+    _version: &Version,
+    _config: &DsmConfig,
+    _sp: &mut Spinner,
+) -> Result<(), Box<dyn Error>> {
     // let url = archive_url(version, &config.arch);
     // let resp = match ureq::get(url.as_str()).call() {
     //     Ok(b) => b,
@@ -56,10 +60,6 @@ fn install_dart_sdk(_version: &Version, _config: &DsmConfig, _sp: &mut Spinner) 
 /// Generate sdk archive url
 fn _archive_url(version: &Version, arch: &Arch) -> String {
     format!(
-        "https://storage.googleapis.com/dart-archive/channels/{}/release/{}/sdk/dartsdk-{}-{}-release.zip", 
-        version.channel, 
-        version, 
-        platform_name(), 
-        arch
+        "https://storage.googleapis.com/dart-archive/channels/{}/release/{}/sdk/dartsdk-{}-{}-release.zip", version.channel, version, platform_name(), arch
     )
 }

@@ -1,5 +1,5 @@
-use std::error::Error;
 use crate::cli::DsmConfig;
+use std::error::Error;
 pub mod install;
 
 pub trait Command: Sized {
