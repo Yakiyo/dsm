@@ -30,7 +30,7 @@ macro_rules! log {
 macro_rules! debug {
     ($($arg:expr),*) => {
         use std::env;
-        use crate::log;
+        use $crate::log;
         if env::var("DEBUG").is_ok() {
             log!("debug", $($arg),*);
         }
