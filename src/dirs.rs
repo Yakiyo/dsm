@@ -77,9 +77,9 @@ impl DsmDir {
     pub fn _set_current(&self, version: &Version) -> anyhow::Result<()> {
         let (_, exists) = self.find_version_dir(version);
         if !exists {
-            return Err(
-               anyhow::anyhow!("Version {version} is not installed. Use `dsm install {version}` to install it."),
-            );
+            return Err(anyhow::anyhow!(
+                "Version {version} is not installed. Use `dsm install {version}` to install it."
+            ));
         }
 
         Ok(())

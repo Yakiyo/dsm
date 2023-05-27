@@ -36,6 +36,7 @@ pub struct DsmConfig {
         global = true,
         value_name = "dsm-dir",
         default_value = "default",
+        hide_default_value = true,
         hide_env_values = true
     )]
     pub base_dir: DsmDir,
@@ -46,12 +47,17 @@ pub enum SubCommand {
     /// Install a specific version of the Dart SDK
     #[clap(name = "install")]
     Install(commands::install::Install),
+
+    /// Uninstall a specific version of the Dart SDK
+    #[clap(name = "uninstall")]
+    Uninstall(commands::uninstall::Uninstall),
 }
 
 impl Cli {
     pub fn handle_sub(self) {
         match self.subcommand {
             SubCommand::Install(e) => e.handle(self.config),
+            SubCommand::Uninstall(e) => e.handle(self.config),
         }
     }
 }

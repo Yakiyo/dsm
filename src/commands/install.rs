@@ -37,10 +37,7 @@ impl super::Command for Install {
 }
 
 /// Install dart sdk
-fn install_dart_sdk(
-    version: &Version,
-    config: &DsmConfig,
-) -> anyhow::Result<()> {
+fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()> {
     let (p, exists) = config.base_dir.find_version_dir(version);
     if exists {
         return Err(anyhow::anyhow!("Version {version} is already installed. For reinstalling, please uninstall first then install again."));
@@ -51,20 +48,25 @@ fn install_dart_sdk(
     debug!("Writing archive file to tempfile");
 
     let mut tmp = tempfile::tempfile().context("Failed to create temporary file")?;
-    let tmp_dir = tempfile::tempdir_in(&config.base_dir.installation_dir).context("Could not create tmp dir")?;
+    let tmp_dir = tempfile::tempdir_in(&config.base_dir.installation_dir)
+        .context("Could not create tmp dir")?;
 
     tmp.write_all(&archive)
         .context("Failed to write contents to temp file")?;
-    
+
     ZipArchive::new(tmp)
         .context("Failed to read ZipArchive")?
         .extract(&tmp_dir)
         .context("Failed to extract content from zip file")?;
 
-    std::fs::rename(tmp_dir.path().join("dart-sdk"), p).context("Failed to copy extracted files to installation dir.")?;
-    
+    std::fs::rename(tmp_dir.path().join("dart-sdk"), p)
+        .context("Failed to copy extracted files to installation dir.")?;
+
     if let Err(e) = tmp_dir.close() {
-       log!("warn", "Could not close temp dir. Please remove it manually\n{e}");
+        log!(
+            "warn",
+            "Could not close temp dir. Please remove it manually\n{e}"
+        );
     }
     Ok(())
 }
