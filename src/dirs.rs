@@ -116,9 +116,3 @@ pub fn home_dir() -> PathBuf {
     }
     PathBuf::from(home_path.unwrap())
 }
-
-// pub fn default_dir() -> String {
-//     let mut p = home_dir();
-//     p.push(".fnm");
-//     String::from(p.to_str().unwrap())
-// }

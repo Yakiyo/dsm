@@ -40,7 +40,6 @@ impl super::Command for Install {
 fn install_dart_sdk(
     version: &Version,
     config: &DsmConfig,
-    // _sp: &mut Spinner,
 ) -> anyhow::Result<()> {
     let archive = fetch_bytes(archive_url(version, &config.arch))?;
     debug!("Writing archive file to tempfile");
