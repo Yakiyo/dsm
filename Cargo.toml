@@ -14,6 +14,9 @@ ureq = "2.6.2"
 yansi = "0.5.1"
 zip = "0.6.5"
 
+[target.'cfg(windows)'.dependencies]
+junction = "1.0.0"
+
 # Size optimizations. Reference: https://tauri.app/v1/guides/building/app-size/
 [profile.release]
 panic = "abort" # Strip expensive panic clean-up logic
