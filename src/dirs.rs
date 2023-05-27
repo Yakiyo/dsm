@@ -25,7 +25,7 @@ impl std::convert::From<&str> for DsmDir {
                 root: [value].iter().collect(),
                 installation_dir: [value, "installations"].iter().collect(),
                 current_dir: [value, "current"].iter().collect(),
-            }
+            },
         }
     }
 }
