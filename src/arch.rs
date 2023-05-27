@@ -41,7 +41,7 @@ pub fn platform_arch() -> &'static str {
     "ia32"
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Arch {
     X64,
     Arm64,

@@ -1,8 +1,10 @@
+use std::io::Write;
+
 use super::Command;
-use crate::{arch::Arch, cli::DsmConfig, platform::platform_name};
+use crate::{arch::Arch, cli::DsmConfig, platform::platform_name, http::fetch_bytes, debug};
 use anyhow::Context;
 use clap::Args;
-use dart_semver::Version;
+use crate::version::Version;
 use spinners::{Spinner, Spinners};
 
 #[derive(Args, Debug, Default)]
@@ -36,15 +38,20 @@ impl Command for Install {
 
 /// Install dart sdk
 fn install_dart_sdk(
-    _version: &Version,
-    _config: &DsmConfig,
+    version: &Version,
+    config: &DsmConfig,
     _sp: &mut Spinner,
 ) -> anyhow::Result<()> {
+    let archive = fetch_bytes(archive_url(version, &config.arch))?;
+    debug!("Writing archive file to tempfile");
+    let mut tmp = tempfile::tempfile().context("Failed to create temporary file")?;
+    tmp.write_all(&archive).context("Failed to write contents to temp file")?;
+
     Ok(())
 }
 
 /// Generate sdk archive url
-fn _archive_url(version: &Version, arch: &Arch) -> String {
+fn archive_url(version: &Version, arch: &Arch) -> String {
     format!(
         "https://storage.googleapis.com/dart-archive/channels/{}/release/{}/sdk/dartsdk-{}-{}-release.zip", version.channel, version, platform_name(), arch
     )

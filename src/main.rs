@@ -10,6 +10,7 @@ mod dirs;
 mod http;
 mod log;
 mod platform;
+mod version; // TODO: update the original dart_semver crate
 
 fn main() {
     yansi::Paint::enable_windows_ascii();

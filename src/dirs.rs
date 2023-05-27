@@ -10,7 +10,7 @@ use std::path::PathBuf;
 ///   - installations
 ///     - vX.Y.Z
 ///     - vA.B.C
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DsmDir {
     pub root: PathBuf,
     pub installation_dir: PathBuf,
