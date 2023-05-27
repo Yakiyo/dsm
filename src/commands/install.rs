@@ -1,13 +1,13 @@
-use crate::version::Version;
 use crate::arch::Arch;
 use crate::cli::DsmConfig;
 use crate::debug;
 use crate::http::fetch_bytes;
 use crate::platform::platform_name;
+use crate::version::Version;
 use anyhow::Context;
+use spinners::{Spinner, Spinners};
 use std::io::Write;
 use zip::read::ZipArchive;
-use spinners::{Spinner, Spinners};
 
 #[derive(clap::Args, Debug, Default)]
 pub struct Install {
@@ -52,7 +52,7 @@ fn install_dart_sdk(
         .context("Failed to read ZipArchive")?
         .extract(config.base_dir.find_version_dir(version).0)
         .context("Failed to extract content from zip file")?;
-    
+
     Ok(())
 }
 

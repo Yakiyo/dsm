@@ -1,5 +1,5 @@
-use dart_semver::Version as DartVersion;
 use dart_semver::Channel;
+use dart_semver::Version as DartVersion;
 
 #[derive(Debug, Default)]
 pub struct Version {
@@ -15,7 +15,14 @@ pub struct Version {
 impl std::convert::From<DartVersion> for Version {
     fn from(v: DartVersion) -> Self {
         let vers = v.to_str();
-        let DartVersion { channel, major, minor, patch, prerelease, prerelease_patch } = v;
+        let DartVersion {
+            channel,
+            major,
+            minor,
+            patch,
+            prerelease,
+            prerelease_patch,
+        } = v;
         Version {
             channel,
             major,
@@ -30,7 +37,7 @@ impl std::convert::From<DartVersion> for Version {
 
 impl Clone for Version {
     fn clone(&self) -> Self {
-        let s= format!("{}", &self.inner);
+        let s = format!("{}", &self.inner);
         Version::from(DartVersion::parse(s).unwrap())
     }
 }
