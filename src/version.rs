@@ -46,3 +46,9 @@ impl std::fmt::Display for Version {
         write!(f, "{}", self.inner.to_str())
     }
 }
+
+impl Version {
+    pub fn to_str(&self) -> String {
+        self.inner.to_str()
+    }
+}

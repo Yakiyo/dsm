@@ -1,6 +1,6 @@
 use crate::log;
 use crate::platform::platform_name;
-use dart_semver::Version;
+use crate::version::Version;
 use std::path::PathBuf;
 
 /// A struct for the app's config dir
@@ -66,16 +66,15 @@ impl std::fmt::Display for DsmDir {
 }
 
 impl DsmDir {
-    #[allow(dead_code)]
-    fn find_version_dir(&self, version: Version) -> (PathBuf, bool) {
-        let p: PathBuf = [&self.installation_dir, &version.to_str().into()]
+    pub fn find_version_dir(&self, version: &Version) -> (PathBuf, bool) {
+        let p: PathBuf = [&self.installation_dir, &PathBuf::from(version.to_str())]
             .iter()
             .collect();
         let exists = p.exists();
         (p, exists)
     }
 
-    pub fn _set_current(&self, version: Version) -> Result<(), &str> {
+    pub fn _set_current(&self, version: &Version) -> Result<(), &str> {
         let (_, exists) = self.find_version_dir(version);
         if !exists {
             return Err(
