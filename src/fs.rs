@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 /// This code is taken from Schniz/fnm. View: https://github.com/Schniz/fnm/blob/master/src/fs.rs
 /// All credits go to the contributors of that file
 
