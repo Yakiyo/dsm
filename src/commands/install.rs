@@ -1,5 +1,5 @@
 use super::Command;
-use crate::{arch::Arch, cli::DsmConfig, dirs::DsmDir, platform::platform_name};
+use crate::{arch::Arch, cli::DsmConfig, platform::platform_name};
 use anyhow::Context;
 use clap::Args;
 use dart_semver::Version;
@@ -13,8 +13,7 @@ pub struct Install {
 
 impl Command for Install {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
-        let def = DsmDir::default();
-        let dir = &config.base_dir.as_ref().unwrap_or(&def);
+        let dir = &config.base_dir;
 
         // match dir.ensure_dirs() {
         //     Ok(_) => {}
