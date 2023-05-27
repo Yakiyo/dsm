@@ -51,7 +51,7 @@ impl std::str::FromStr for DsmDir {
 impl std::default::Default for DsmDir {
     fn default() -> Self {
         DsmDir::from(
-            [home_dir().to_str().unwrap(), ".fnm"]
+            [home_dir().to_str().unwrap(), ".dsm"]
                 .iter()
                 .collect::<PathBuf>(),
         )
