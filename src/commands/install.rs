@@ -1,9 +1,9 @@
 use super::Command;
 use crate::{arch::Arch, cli::DsmConfig, dirs::DsmDir, platform::platform_name};
+use anyhow::Context;
 use clap::Args;
 use dart_semver::Version;
 use spinners::{Spinner, Spinners};
-use std::error::Error;
 
 #[derive(Args, Debug, Default)]
 pub struct Install {
@@ -12,14 +12,15 @@ pub struct Install {
 }
 
 impl Command for Install {
-    fn run(self, config: DsmConfig) -> Result<(), Box<dyn Error>> {
+    fn run(self, config: DsmConfig) -> anyhow::Result<()> {
         let def = DsmDir::default();
         let dir = &config.base_dir.as_ref().unwrap_or(&def);
 
-        match dir.ensure_dirs() {
-            Ok(_) => {}
-            Err(e) => return Err(Box::new(e)),
-        }
+        // match dir.ensure_dirs() {
+        //     Ok(_) => {}
+        //     Err(e) => return Err(Box::new(e)),
+        // }
+        dir.ensure_dirs().context("Failed to setup dsm dirs")?;
 
         let mut sp = Spinner::new(
             Spinners::Line,
@@ -39,21 +40,7 @@ fn install_dart_sdk(
     _version: &Version,
     _config: &DsmConfig,
     _sp: &mut Spinner,
-) -> Result<(), Box<dyn Error>> {
-    // let url = archive_url(version, &config.arch);
-    // let resp = match ureq::get(url.as_str()).call() {
-    //     Ok(b) => b,
-    //     Err(e) => {
-    //         sp.stop();
-    //         log!("error", "{}", e.kind());
-    //         std::process::exit(1);
-    //     }
-    // };
-    // let len: usize = resp.header("Content-Length")
-    // .unwrap()
-    // .parse().unwrap();
-    // let mut bytes = Vec::with_capacity(len);
-    // resp.into_reader().read_to_end(&mut bytes);
+) -> anyhow::Result<()> {
     Ok(())
 }
 

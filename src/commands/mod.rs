@@ -3,7 +3,7 @@ use std::error::Error;
 pub mod install;
 
 pub trait Command: Sized {
-    fn run(self, config: DsmConfig) -> Result<(), Box<dyn Error>>;
+    fn run(self, config: DsmConfig) -> anyhow::Result<()>;
 
     fn catch(err: Box<dyn Error>) {
         eprintln!("Error: {:?}", err);
@@ -13,7 +13,7 @@ pub trait Command: Sized {
     fn handle(self, config: DsmConfig) {
         match self.run(config) {
             Ok(()) => (),
-            Err(err) => Self::catch(err),
+            Err(err) => Self::catch(err.into()),
         }
     }
 }
