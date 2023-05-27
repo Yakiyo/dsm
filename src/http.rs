@@ -8,7 +8,7 @@ use ureq::{get, Response};
 pub fn fetch<P: AsRef<str>>(url: P) -> anyhow::Result<Response> {
     let resp = get(url.as_ref())
         .call()
-        .context("Failed to make http request to {url}")?;
+        .context("Failed to make http request to {url}. Possible reasons: Invalid arch type, invalid version number.")?;
     Ok(resp)
 }
 
@@ -18,7 +18,7 @@ pub fn fetch_bytes<P: AsRef<str>>(url: P) -> anyhow::Result<Vec<u8>> {
     let mut bytes = Vec::new();
     resp.into_reader()
         .read_to_end(&mut bytes)
-        .context("Failed to read bytes from http response")?;
+        .context("Failed to read bytes from http response.")?;
     Ok(bytes)
 }
 
