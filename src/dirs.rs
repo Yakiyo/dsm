@@ -19,10 +19,13 @@ pub struct DsmDir {
 
 impl std::convert::From<&str> for DsmDir {
     fn from(value: &str) -> Self {
-        DsmDir {
-            root: [value].iter().collect(),
-            installation_dir: [value, "installations"].iter().collect(),
-            current_dir: [value, "current"].iter().collect(),
+        match value {
+            "default" => DsmDir::default(),
+            _ => DsmDir {
+                root: [value].iter().collect(),
+                installation_dir: [value, "installations"].iter().collect(),
+                current_dir: [value, "current"].iter().collect(),
+            }
         }
     }
 }

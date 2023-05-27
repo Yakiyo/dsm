@@ -35,9 +35,10 @@ pub struct DsmConfig {
         env = "DSM_DIR",
         global = true,
         value_name = "dsm-dir",
+        default_value = "default",
         hide_env_values = true
     )]
-    pub base_dir: Option<DsmDir>,
+    pub base_dir: DsmDir,
 }
 
 #[derive(Subcommand, Debug)]
