@@ -55,6 +55,10 @@ pub enum SubCommand {
     /// Change Dart SDK version
     #[clap(name = "use")]
     Use(commands::r#use::Use),
+
+    /// List all installed versions
+    #[clap(name = "ls")]
+    Ls(commands::ls::Ls),
 }
 
 impl Cli {
@@ -63,6 +67,7 @@ impl Cli {
             SubCommand::Install(e) => e.handle(self.config),
             SubCommand::Uninstall(e) => e.handle(self.config),
             SubCommand::Use(e) => e.handle(self.config),
+            SubCommand::Ls(e) => e.handle(self.config),
         }
     }
 }
