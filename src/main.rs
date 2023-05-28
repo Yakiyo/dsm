@@ -7,10 +7,10 @@ mod arch;
 mod cli;
 mod commands;
 mod dirs;
+mod fs;
 mod http;
 mod log;
 mod platform;
-mod fs;
 mod version; // TODO: update the original dart_semver crate
 
 fn main() {

@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
-use crate::version::Version;
 use crate::fs;
+use crate::version::Version;
 // use anyhow::Context;
 use yansi::Paint;
 

@@ -2,8 +2,8 @@ use crate::cli::DsmConfig;
 use yansi::Paint;
 
 pub mod install;
-pub mod uninstall;
 pub mod ls;
+pub mod uninstall;
 pub mod r#use;
 
 pub trait Command: Sized {
