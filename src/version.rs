@@ -1,3 +1,4 @@
+use anyhow::Context;
 use dart_semver::Channel;
 use dart_semver::Version as DartVersion;
 
@@ -30,7 +31,7 @@ impl std::convert::From<DartVersion> for Version {
             patch,
             prerelease,
             prerelease_patch,
-            inner: DartVersion::parse(vers).unwrap(),
+            inner: DartVersion::parse(vers).context("Invalid version string").unwrap(),
         }
     }
 }

@@ -24,7 +24,7 @@ pub fn remove_symlink_dir<P: AsRef<Path>>(path: P) -> std::io::Result<()> {
 
 #[cfg(unix)]
 pub fn remove_symlink_dir<P: AsRef<Path>>(path: P) -> std::io::Result<()> {
-    std::fs::remove_file(path)?;
+    std::fs::remove_dir_all(path)?;
     Ok(())
 }
 

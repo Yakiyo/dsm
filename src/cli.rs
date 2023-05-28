@@ -51,6 +51,10 @@ pub enum SubCommand {
     /// Uninstall a specific version of the Dart SDK
     #[clap(name = "uninstall")]
     Uninstall(commands::uninstall::Uninstall),
+
+    /// Change Dart SDK version
+    #[clap(name = "use")]
+    Use(commands::r#use::Use),
 }
 
 impl Cli {
@@ -58,6 +62,7 @@ impl Cli {
         match self.subcommand {
             SubCommand::Install(e) => e.handle(self.config),
             SubCommand::Uninstall(e) => e.handle(self.config),
+            SubCommand::Use(e) => e.handle(self.config),
         }
     }
 }

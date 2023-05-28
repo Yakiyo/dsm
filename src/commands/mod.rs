@@ -3,6 +3,7 @@ use yansi::Paint;
 
 pub mod install;
 pub mod uninstall;
+pub mod r#use;
 
 pub trait Command: Sized {
     fn run(self, config: DsmConfig) -> anyhow::Result<()>;
