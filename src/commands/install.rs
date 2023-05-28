@@ -30,7 +30,7 @@ impl super::Command for Install {
             return Err(e);
         }
 
-        sp.stop_and_persist("✔", "Downloaded Dart sdk".into());
+        sp.stop_and_persist("✔", format!("Downloaded Dart SDK version {}", self.version));
 
         Ok(())
     }
