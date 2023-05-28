@@ -3,7 +3,7 @@
 
 use crate::fs;
 use crate::version::Version;
-// use anyhow::Context;
+use anyhow::Context;
 use yansi::Paint;
 
 #[derive(clap::Args, Debug, Default)]
@@ -19,14 +19,14 @@ impl super::Command for Use {
         if !exists {
             return Err(anyhow::anyhow!("Version {} is not installed. Cannot use it. View all available versions with the `ls` command.", Paint::cyan(&self.version)));
         }
-        unimplemented!("`Use` command is not implemented yet");
-        // replace_symlink(&config.base_dir.current_dir, &version_path)
-        //     .context("Failed in symlinking version directory to current directory")?;
-        // println!(
-        //     "Successfully set {} as current version",
-        //     Paint::cyan(&self.version)
-        // );
-        // Ok(())
+        // unimplemented!("`Use` command is not implemented yet");
+        replace_symlink(&config.base_dir.current_dir, &version_path)
+            .context("Failed in symlinking version directory to current directory")?;
+        println!(
+            "Successfully set {} as current version",
+            Paint::cyan(&self.version)
+        );
+        Ok(())
     }
 }
 
