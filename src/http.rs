@@ -3,12 +3,14 @@
 
 use anyhow::Context;
 use ureq::{get, Response};
+use yansi::Paint;
 
 /// Base fetch method
 pub fn fetch<P: AsRef<str>>(url: P) -> anyhow::Result<Response> {
-    let resp = get(url.as_ref())
+    let url = url.as_ref();
+    let resp = get(url)
         .call()
-        .context("Failed to make http request to {url}. Possible reasons: Invalid arch type, invalid version number.")?;
+        .context(format!("Failed to make http request to {}.\nPossible reasons: Invalid arch type, invalid version number.", Paint::blue(url)))?;
     Ok(resp)
 }
 
