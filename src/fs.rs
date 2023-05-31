@@ -31,22 +31,3 @@ pub fn shallow_read_symlink<P: AsRef<Path>>(path: P) -> std::io::Result<std::pat
     std::fs::read_link(path)
 }
 
-pub fn unlink_symlink(path: &str) -> std::io::Result<()> {
-    use std::fs;
-    if let Ok(metadata) = fs::symlink_metadata(path) {
-        if metadata.file_type().is_symlink() {
-            fs::remove_file(path)?;
-        } else {
-            return Err(std::io::Error::new(
-                std::io::ErrorKind::InvalidInput,
-                "The provided path is not a symbolic link.",
-            ));
-        }
-    } else {
-        return Err(std::io::Error::new(
-            std::io::ErrorKind::NotFound,
-            "The provided path does not exist.",
-        ));
-    }
-    Ok(())
-}

@@ -1,4 +1,4 @@
-use crate::log;
+use crate::error;
 use crate::platform::platform_name;
 use dart_semver::Version;
 use std::path::PathBuf;
@@ -77,7 +77,7 @@ impl DsmDir {
     pub fn ensure_dirs(&self) -> Result<(), std::io::Error> {
         std::fs::create_dir_all(&self.root)?;
         std::fs::create_dir_all(&self.installation_dir)?;
-        std::fs::create_dir_all(&self.current_dir)?;
+        // std::fs::create_dir_all(&self.current_dir)?;
         Ok(())
     }
 }
@@ -90,18 +90,15 @@ pub fn home_dir() -> PathBuf {
         "windows" => "UserProfile",
         "linux" | "macos" => "HOME",
         _ => {
-            log!("error", "Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm");
-            std::process::exit(1);
+            error!("Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm");
         }
     };
 
     let home_path = env::var(var);
     if home_path.is_err() {
-        log!(
-            "error",
+        error!(
             "Cannot read home directory. Consider manually setting the value of `DSM_DIR`"
         );
-        std::process::exit(1);
     }
     PathBuf::from(home_path.unwrap())
 }

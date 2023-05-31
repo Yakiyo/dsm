@@ -63,8 +63,7 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
         .context("Failed to copy extracted files to installation dir.")?;
 
     if let Err(e) = tmp_dir.close() {
-        log!(
-            "warn",
+        debug!(
             "Could not close temp dir. Please remove it manually\n{e}"
         );
     }
