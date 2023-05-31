@@ -1,7 +1,7 @@
-#![allow(dead_code)]
-#![allow(unused_variables)]
-
+use crate::fs;
 use crate::cli::DsmConfig;
+use crate::dirs::DsmDir;
+use anyhow::Context;
 use dart_semver::Version;
 use yansi::Paint;
 
@@ -18,9 +18,7 @@ impl super::Command for Use {
         if !version_path.exists() {
             return Err(anyhow::anyhow!("Version {} is not installed. Cannot use it. View all available versions with the `ls` command.", Paint::cyan(&self.version)));
         }
-
-
-        
+        replace_symlink(dir, &self.version)?;
         println!(
             "Successfully set {} as current version",
             Paint::cyan(&self.version)
@@ -30,24 +28,14 @@ impl super::Command for Use {
     }
 }
 
-// /// Tries to delete `from`, and then tries to symlink `from` to `to` anyway.
-// /// If the symlinking fails, it will return the errors in the following order:
-// /// * The deletion error (if exists)
-// /// * The creation error
-// ///
-// /// This way, we can create a symlink if it is missing.
-// fn replace_symlink(from: &std::path::Path, to: &std::path::Path) -> anyhow::Result<()> {
-//     if let Some(parent_dir) = to.parent() {
-//         std::fs::create_dir_all(parent_dir)
-//             .context("Failed to create parent directory of current dir")?;
-//     }
-//     let symlink_deletion_result = if to.exists() {
-//         fs::remove_symlink_dir(to).context("")
-//     } else {
-//         Ok(())
-//     };
-//     match fs::symlink_dir(from, to) {
-//         ok @ Ok(_) => ok.context("All Okay!"),
-//         err @ Err(_) => symlink_deletion_result.and(err.context("Error when symlinking directory")),
-//     }
-// }
+/// Remove if prev symlink exists and symlinks the target versions bin directory
+fn replace_symlink(dirs: &DsmDir, version: &Version) -> anyhow::Result<()> {
+    let from = dirs.installation_dir.join(version.to_str()).join("bin");
+    let to = &dirs.bin;
+    if to.exists() {
+        crate::debug!("Removing previous link");
+        std::fs::remove_dir_all(to).context("Failed to remove previous link")?;
+    }
+    fs::symlink_dir(from, to).context("Failed to hard link executable.")?;
+    Ok(())
+}

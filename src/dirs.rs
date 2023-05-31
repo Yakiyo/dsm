@@ -6,7 +6,7 @@ use std::path::PathBuf;
 /// A struct for the app's config dir
 ///
 /// - root
-///   - current // a symlink to the dir of an installed version
+///   - bin // a symlink to the `bin` directory in an installation dir
 ///   - installations
 ///     - vX.Y.Z
 ///     - vA.B.C
@@ -14,17 +14,17 @@ use std::path::PathBuf;
 pub struct DsmDir {
     pub root: PathBuf,
     pub installation_dir: PathBuf,
-    pub current_dir: PathBuf,
+    pub bin: PathBuf,
 }
 
 impl std::convert::From<&str> for DsmDir {
     fn from(value: &str) -> Self {
         match value {
-            "default" => DsmDir::default(),
+            "default" | "~" | "~/" => DsmDir::default(),
             _ => DsmDir {
                 root: [value].iter().collect(),
                 installation_dir: [value, "installations"].iter().collect(),
-                current_dir: [value, "current"].iter().collect(),
+                bin: [value, "bin"].iter().collect(),
             },
         }
     }
@@ -32,11 +32,11 @@ impl std::convert::From<&str> for DsmDir {
 
 impl std::convert::From<PathBuf> for DsmDir {
     fn from(value: PathBuf) -> Self {
-        DsmDir::from(
-            value
-                .to_str()
-                .expect("Could not convert directory path to string!"),
-        )
+        let value = value.to_str();
+        if value.is_none() {
+            error!("Could not resolve provided value to string");
+        }
+        DsmDir::from(value.unwrap())
     }
 }
 
@@ -75,7 +75,7 @@ impl DsmDir {
     pub fn ensure_dirs(&self) -> Result<(), std::io::Error> {
         std::fs::create_dir_all(&self.root)?;
         std::fs::create_dir_all(&self.installation_dir)?;
-        // std::fs::create_dir_all(&self.current_dir)?;
+        std::fs::create_dir_all(&self.bin)?;
         Ok(())
     }
 }
