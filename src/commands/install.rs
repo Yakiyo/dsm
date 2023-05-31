@@ -3,8 +3,8 @@ use crate::cli::DsmConfig;
 use crate::debug;
 use crate::http::fetch_bytes;
 use crate::platform::platform_name;
-use dart_semver::Version;
 use anyhow::Context;
+use dart_semver::Version;
 use spinners::{Spinner, Spinners};
 use std::io::Write;
 use zip::read::ZipArchive;
@@ -63,9 +63,7 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
         .context("Failed to copy extracted files to installation dir.")?;
 
     if let Err(e) = tmp_dir.close() {
-        debug!(
-            "Could not close temp dir. Please remove it manually\n{e}"
-        );
+        debug!("Could not close temp dir. Please remove it manually\n{e}");
     }
     Ok(())
 }

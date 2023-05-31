@@ -32,7 +32,7 @@ impl super::Command for Use {
             "Successfully set {} as current version",
             Paint::cyan(&self.version)
         );
-        
+
         Ok(())
     }
 }

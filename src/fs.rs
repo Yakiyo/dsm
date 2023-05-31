@@ -30,4 +30,3 @@ pub fn remove_symlink_dir<P: AsRef<Path>>(path: P) -> std::io::Result<()> {
 pub fn shallow_read_symlink<P: AsRef<Path>>(path: P) -> std::io::Result<std::path::PathBuf> {
     std::fs::read_link(path)
 }
-

@@ -96,9 +96,7 @@ pub fn home_dir() -> PathBuf {
 
     let home_path = env::var(var);
     if home_path.is_err() {
-        error!(
-            "Cannot read home directory. Consider manually setting the value of `DSM_DIR`"
-        );
+        error!("Cannot read home directory. Consider manually setting the value of `DSM_DIR`");
     }
     PathBuf::from(home_path.unwrap())
 }
