@@ -3,7 +3,7 @@ use crate::cli::DsmConfig;
 use crate::debug;
 use crate::http::fetch_bytes;
 use crate::platform::platform_name;
-use crate::version::Version;
+use dart_semver::Version;
 use anyhow::Context;
 use spinners::{Spinner, Spinners};
 use std::io::Write;

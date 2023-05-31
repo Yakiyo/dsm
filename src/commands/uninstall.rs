@@ -2,7 +2,7 @@ use anyhow::Context;
 use yansi::Paint;
 
 use crate::cli::DsmConfig;
-use crate::version::Version;
+use dart_semver::Version;
 
 #[derive(clap::Args, Debug, Default)]
 pub struct Uninstall {

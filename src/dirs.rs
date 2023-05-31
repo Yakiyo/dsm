@@ -1,6 +1,6 @@
 use crate::log;
 use crate::platform::platform_name;
-use crate::version::Version;
+use dart_semver::Version;
 use std::path::PathBuf;
 
 /// A struct for the app's config dir

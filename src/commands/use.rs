@@ -2,7 +2,7 @@
 #![allow(unused_variables)]
 
 use crate::fs;
-use crate::version::Version;
+use dart_semver::Version;
 use anyhow::Context;
 use yansi::Paint;
 
@@ -36,11 +36,18 @@ impl super::Command for Use {
 /// * The creation error
 ///
 /// This way, we can create a symlink if it is missing.
-fn replace_symlink(from: &std::path::Path, to: &std::path::Path) -> std::io::Result<()> {
+fn replace_symlink(from: &std::path::Path, to: &std::path::Path) -> anyhow::Result<()> {
     println!("{}", &to.display());
-    let symlink_deletion_result = fs::remove_symlink_dir(to);
+    let symlink_deletion_result =
+        fs::remove_symlink_dir(to).context("Unable to delete previously linked directory.");
+    
+    match fs::unlink_symlink(to.to_str().unwrap()).context("fucked up") {
+        Err(e) => eprintln!("{e}"),
+        _ => {},
+    }
     match fs::symlink_dir(from, to) {
-        ok @ Ok(_) => ok,
-        err @ Err(_) => symlink_deletion_result.and(err),
+        ok @ Ok(_) => ok.context("Successful."),
+        err @ Err(_) => symlink_deletion_result
+            .and(err.context("Unable to link new version directory as current.")),
     }
 }
