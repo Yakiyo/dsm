@@ -13,8 +13,8 @@ pub struct Uninstall {
 impl super::Command for Uninstall {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
         let dir = &config.base_dir;
-        let (p, exists) = dir.find_version_dir(&self.version);
-        if !exists {
+        let p = dir.find_version_dir(&self.version);
+        if !p.exists() {
             return Err(anyhow::anyhow!(
                 "Version {} is not installed. Use the `ls` command to view all installed versions",
                 Paint::cyan(&self.version)

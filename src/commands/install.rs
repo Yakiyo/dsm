@@ -38,8 +38,8 @@ impl super::Command for Install {
 
 /// Install dart sdk
 fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()> {
-    let (p, exists) = config.base_dir.find_version_dir(version);
-    if exists {
+    let p = config.base_dir.find_version_dir(version);
+    if p.exists() {
         return Err(anyhow::anyhow!("Version {version} is already installed. For reinstalling, please uninstall first then install again."));
     }
 

@@ -66,12 +66,10 @@ impl std::fmt::Display for DsmDir {
 }
 
 impl DsmDir {
-    pub fn find_version_dir(&self, version: &Version) -> (PathBuf, bool) {
-        let p: PathBuf = [&self.installation_dir, &PathBuf::from(version.to_str())]
+    pub fn find_version_dir(&self, version: &Version) -> PathBuf {
+        [&self.installation_dir, &PathBuf::from(version.to_str())]
             .iter()
-            .collect();
-        let exists = p.exists();
-        (p, exists)
+            .collect()
     }
 
     pub fn ensure_dirs(&self) -> Result<(), std::io::Error> {
