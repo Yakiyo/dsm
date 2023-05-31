@@ -13,4 +13,3 @@ pub fn symlink_dir<P: AsRef<Path>, U: AsRef<Path>>(from: P, to: U) -> std::io::R
     junction::create(from, to)?;
     Ok(())
 }
-

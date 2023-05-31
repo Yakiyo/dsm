@@ -22,8 +22,12 @@ impl super::Command for Ls {
             println!("{}", yansi::Paint::red("No installations found!"));
             std::process::exit(0);
         }
-        vers.iter().for_each(|x| println!("{}", yansi::Paint::cyan(x.to_str().unwrap_or(&x.to_string_lossy()))));
-
+        vers.iter().for_each(|x| {
+            println!(
+                "{}",
+                yansi::Paint::cyan(x.to_str().unwrap_or(&x.to_string_lossy()))
+            )
+        });
 
         Ok(())
     }

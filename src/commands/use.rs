@@ -1,6 +1,6 @@
-use crate::fs;
 use crate::cli::DsmConfig;
 use crate::dirs::DsmDir;
+use crate::fs;
 use anyhow::Context;
 use dart_semver::Version;
 use yansi::Paint;
