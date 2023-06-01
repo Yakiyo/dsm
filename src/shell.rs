@@ -72,10 +72,16 @@ impl std::fmt::Display for Shell {
 impl Shell {
     pub fn setup_envs(&self, dirs: &DsmDir) -> anyhow::Result<String> {
         let s = match self {
-            Shell::Bash | Shell::Zsh => {
+            Shell::Bash=> {
                 format!(
-                    "# Add this in your .{self}rc file as `eval $(dsm env {self})`\n\n\
+                    "# Add this in your .bashrc file as `eval $(dsm env bash)`\n\n\
                     export PATH={:?}:$PATH",
+                    dirs.bin.as_os_str()
+                )
+            }
+            Shell::Zsh => {
+                format!(
+                    "export PATH={:?}:$PATH",
                     dirs.bin.as_os_str()
                 )
             }
