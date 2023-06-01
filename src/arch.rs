@@ -72,7 +72,10 @@ impl std::str::FromStr for Arch {
             "arm64" => Ok(Arch::Arm64),
             "x64" => Ok(Arch::X64),
             "ia32" => Ok(Arch::Ia32),
-            unknown => Err(anyhow::anyhow!("Unknown arch {unknown}. Must be one of {}", SUPPORT_ARCHS.join(", "))),
+            unknown => Err(anyhow::anyhow!(
+                "Unknown arch {unknown}. Must be one of {}",
+                SUPPORT_ARCHS.join(", ")
+            )),
         }
     }
 }
