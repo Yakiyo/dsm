@@ -252,9 +252,9 @@ dependencies = [
 
 [[package]]
 name = "dart-semver"
-version = "0.1.2"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d50abb1a7645197a910c1a38f86114fb7b03f26530b259d1fa70238562bdf9d6"
+checksum = "71eeee9904f59a829b45672adb51608cdd5eb3db3fb351ea61a268036de249ba"
 dependencies = [
  "pest",
  "pest_derive",
