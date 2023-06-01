@@ -22,7 +22,10 @@ impl std::str::FromStr for Shell {
         let s = s.to_lowercase();
         let s = s.as_str();
         if !AVAILABLE_SHELLS.contains(&s) {
-            return Err(anyhow::anyhow!("{s} is not a valid shell value. Must be one of ${}", AVAILABLE_SHELLS.join(", ")));
+            return Err(anyhow::anyhow!(
+                "{s} is not a valid shell value. Must be one of ${}",
+                AVAILABLE_SHELLS.join(", ")
+            ));
         }
         let shell = match s {
             "cmd" => Shell::Cmd,
