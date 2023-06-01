@@ -1,12 +1,12 @@
 [package]
 name = "dsm"
 version = "0.1.0"
-authors = ["Yakiyo"]
+authors = ["Yakiyo <yakiyo1206@gmail.com>"]
 edition = "2018"
 
 [dependencies]
 anyhow = "1.0.71"
-clap = { version = "3.2.23", features = ["derive", "env"] }
+clap = { version = "3.2.25", features = ["derive", "env"] }
 dart-semver = "0.1.3"
 spinners = "4.1.0"
 tempfile = "3.5.0"
