@@ -64,6 +64,10 @@ pub enum SubCommand {
     /// Print required environment variables for dsm
     #[clap(name = "env")]
     Env(commands::env::Env),
+
+    /// Prints the current version in use
+    #[clap(name = "current")]
+    Current(commands::current::Current),
 }
 
 impl Cli {
@@ -74,6 +78,7 @@ impl Cli {
             SubCommand::Use(e) => e.handle(self.config),
             SubCommand::Ls(e) => e.handle(self.config),
             SubCommand::Env(e) => e.handle(self.config),
+            SubCommand::Current(e) => e.handle(self.config),
         }
     }
 }
