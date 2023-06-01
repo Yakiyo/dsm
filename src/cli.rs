@@ -57,7 +57,7 @@ pub enum SubCommand {
     Use(commands::r#use::Use),
 
     /// List all installed versions
-    #[clap(name = "ls")]
+    #[clap(name = "list", visible_aliases = &["ls"])]
     Ls(commands::ls::Ls),
 
     /// Print required environment variables for dsm
