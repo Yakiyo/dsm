@@ -59,6 +59,10 @@ pub enum SubCommand {
     /// List all installed versions
     #[clap(name = "ls")]
     Ls(commands::ls::Ls),
+
+    /// Print required environment variables for dsm
+    #[clap(name = "env")]
+    Env(commands::env::Env),
 }
 
 impl Cli {
@@ -68,6 +72,7 @@ impl Cli {
             SubCommand::Uninstall(e) => e.handle(self.config),
             SubCommand::Use(e) => e.handle(self.config),
             SubCommand::Ls(e) => e.handle(self.config),
+            SubCommand::Env(e) => e.handle(self.config),
         }
     }
 }

@@ -4,6 +4,7 @@ use yansi::Paint;
 pub mod install;
 pub mod ls;
 pub mod uninstall;
+pub mod env;
 pub mod r#use;
 
 pub trait Command: Sized {
