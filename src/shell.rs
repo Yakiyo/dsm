@@ -82,7 +82,8 @@ impl Shell {
             Shell::Fish => {
                 format!(
                     "# Add this in your fish config file as `dsm env fish | source`\n\n\
-                    set -gx PATH {:?} $PATH", dirs.bin.as_os_str()
+                    set -gx PATH {:?} $PATH",
+                    dirs.bin.as_os_str()
                 )
             }
             Shell::Powershell => {
