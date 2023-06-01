@@ -41,6 +41,9 @@ pub fn platform_arch() -> &'static str {
     "ia32"
 }
 
+/// All supported archs. This are the ones dart binaries are built for.
+pub const SUPPORT_ARCHS: &[&str; 4] = &["arm", "arm64", "x64", "ia32"];
+
 #[derive(Debug, Clone)]
 pub enum Arch {
     X64,
@@ -61,7 +64,7 @@ impl Arch {
 }
 
 impl std::str::FromStr for Arch {
-    type Err = ArchErr;
+    type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
@@ -69,7 +72,7 @@ impl std::str::FromStr for Arch {
             "arm64" => Ok(Arch::Arm64),
             "x64" => Ok(Arch::X64),
             "ia32" => Ok(Arch::Ia32),
-            unknown => Err(ArchErr::new(&format!("Unknown arch {unknown}. Please manually set arch with the `DSM_ARCH` env or the `--arch` flag"))),
+            unknown => Err(anyhow::anyhow!("Unknown arch {unknown}. Must be one of {}", SUPPORT_ARCHS.join(", "))),
         }
     }
 }
@@ -79,27 +82,27 @@ impl std::fmt::Display for Arch {
     }
 }
 
-#[derive(Debug)]
-pub struct ArchErr {
-    pub message: String,
-}
+// #[derive(Debug)]
+// pub struct ArchErr {
+//     pub message: String,
+// }
 
-impl ArchErr {
-    fn new(msg: &str) -> ArchErr {
-        ArchErr {
-            message: msg.to_string(),
-        }
-    }
-}
+// impl ArchErr {
+//     fn new(msg: &str) -> ArchErr {
+//         ArchErr {
+//             message: msg.to_string(),
+//         }
+//     }
+// }
 
-impl std::error::Error for ArchErr {
-    fn description(&self) -> &str {
-        &self.message
-    }
-}
+// impl std::error::Error for ArchErr {
+//     fn description(&self) -> &str {
+//         &self.message
+//     }
+// }
 
-impl std::fmt::Display for ArchErr {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.message)
-    }
-}
+// impl std::fmt::Display for ArchErr {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//         write!(f, "{}", self.message)
+//     }
+// }

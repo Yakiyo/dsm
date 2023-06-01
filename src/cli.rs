@@ -1,4 +1,4 @@
-use crate::arch::{platform_arch, Arch};
+use crate::arch::{platform_arch, Arch, SUPPORT_ARCHS};
 use crate::commands;
 use crate::commands::Command;
 use crate::dirs::DsmDir;
@@ -25,7 +25,8 @@ pub struct DsmConfig {
         default_value = platform_arch(),
         global = true,
         hide_env_values = true,
-        hide_default_value = true
+        hide_default_value = true,
+        possible_values = SUPPORT_ARCHS
     )]
     pub arch: Arch,
 
