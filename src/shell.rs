@@ -1,7 +1,6 @@
-#![allow(dead_code, unused_variables)]
-
 use anyhow::Context;
-
+use crate::error;
+use crate::platform::platform_name;
 use crate::dirs::DsmDir;
 
 #[cfg(windows)]
@@ -22,7 +21,13 @@ pub enum Shell {
 
 impl Default for Shell {
     fn default() -> Self {
-        Self::Bash // for no reason
+        match platform_name() {
+            "linux" | "darwin" => Self::Bash,
+            "windows" => Self::Powershell,
+            platform => {
+                error!("Unknown platform {platform} received");
+            }
+        }
     }
 }
 
