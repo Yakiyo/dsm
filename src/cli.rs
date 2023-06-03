@@ -47,7 +47,7 @@ pub struct DsmConfig {
         long = "no-colors",
         env = "DSM_COLORS",
         global = true,
-        hide_env_values = true,
+        hide_env_values = true
     )]
     pub disable_colors: bool,
 }

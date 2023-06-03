@@ -16,11 +16,12 @@ mod versions;
 
 fn main() {
     let args = cli::parse();
-    
+
     if &args.config.disable_colors == &true {
         yansi::Paint::disable();
     }
-    #[cfg(windows)] {
+    #[cfg(windows)]
+    {
         // If ansi escape sequences are not supported, disable colors on windows
         if !yansi::Paint::enable_windows_ascii() {
             yansi::Paint::disable();
