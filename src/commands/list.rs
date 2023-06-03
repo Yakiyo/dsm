@@ -10,7 +10,7 @@ impl super::Command for List {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
         let installation_dir = &config.base_dir.installation_dir;
         let vers = versions::list_versions(installation_dir)?;
-        if vers.len() < 1 {
+        if vers.is_empty() {
             println!("{}", Paint::yellow("No versions installed"));
             return Ok(());
         }

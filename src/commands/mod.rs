@@ -17,7 +17,7 @@ pub trait Command: Sized {
 
     fn handle(self, config: DsmConfig) {
         if let Err(e) = self.run(config) {
-            return Self::catch(e);
+            Self::catch(e)
         }
     }
 }

@@ -14,7 +14,7 @@ pub fn list_versions<P: AsRef<Path>>(installation_dir: P) -> anyhow::Result<Vec<
         if entry
             .file_name()
             .to_str()
-            .map_or(false, |f| f.starts_with("."))
+            .map_or(false, |f| f.starts_with('.'))
         {
             continue;
         }
@@ -26,7 +26,7 @@ pub fn list_versions<P: AsRef<Path>>(installation_dir: P) -> anyhow::Result<Vec<
             .ok_or(anyhow::anyhow!("Unable to read filename."))?
             .to_str()
             .ok_or(anyhow::anyhow!("Could not convert file name to str"))?;
-        let version = Version::parse(&file_name)?;
+        let version = Version::parse(file_name)?;
         vec.push(version);
     }
     Ok(vec)

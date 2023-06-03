@@ -9,7 +9,7 @@ pub fn fetch<P: AsRef<str>>(url: P) -> anyhow::Result<Response> {
     let url = url.as_ref();
     let resp = get(url)
         .call()
-        .context(format!("Failed to make http request"))?;
+        .context("Failed to make http request".to_string())?;
     Ok(resp)
 }
 
