@@ -3,9 +3,9 @@ use anyhow::Context;
 use std::fs;
 
 #[derive(clap::Args, Debug, Default)]
-pub struct Ls;
+pub struct List;
 
-impl super::Command for Ls {
+impl super::Command for List {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
         config
             .base_dir
