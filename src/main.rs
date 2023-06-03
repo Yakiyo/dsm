@@ -12,6 +12,7 @@ mod http;
 mod log;
 mod platform;
 mod shell;
+mod versions;
 
 fn main() {
     yansi::Paint::enable_windows_ascii();
