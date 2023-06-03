@@ -35,7 +35,7 @@ pub struct DsmConfig {
         long = "dsm-dir",
         env = "DSM_DIR",
         global = true,
-        value_name = "dsm-dir",
+        value_name = "DSM_DIR",
         default_value = "~",
         hide_default_value = true,
         hide_env_values = true
