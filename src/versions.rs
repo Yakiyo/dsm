@@ -3,9 +3,13 @@ use dart_semver::Version;
 use std::path::Path;
 
 /// List all installed versions
-pub fn _list_versions<P: AsRef<Path>>(installation_dir: P) -> anyhow::Result<Vec<Version>> {
+pub fn list_versions<P: AsRef<Path>>(installation_dir: P) -> anyhow::Result<Vec<Version>> {
     let mut vec: Vec<Version> = Vec::new();
-    for result_entry in installation_dir.as_ref().read_dir()? {
+    let installation_dir = installation_dir.as_ref();
+    if !installation_dir.exists() {
+        return Ok(vec);
+    }
+    for result_entry in installation_dir.read_dir()? {
         let entry = result_entry?;
         if entry
             .file_name()

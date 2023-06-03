@@ -1,32 +1,31 @@
+use yansi::Paint;
+
 use crate::cli::DsmConfig;
-use anyhow::Context;
-use std::fs;
+use crate::versions;
 
 #[derive(clap::Args, Debug, Default)]
 pub struct List;
 
 impl super::Command for List {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
-        config
-            .base_dir
-            .ensure_dirs()
-            .context("Failed to ensure base dirs")?;
-        let dir_entries = fs::read_dir(&config.base_dir.installation_dir)
-            .context("Failed to read installation dir")?;
-        let vers: Vec<std::ffi::OsString> = dir_entries
-            .filter(|f| f.is_ok())
-            .map(|f| f.unwrap().file_name())
-            .collect();
-
+        let installation_dir = &config.base_dir.installation_dir;
+        let vers = versions::list_versions(installation_dir)?;
         if vers.len() < 1 {
-            println!("{}", yansi::Paint::red("No installations found!"));
-            std::process::exit(0);
+            println!("{}", Paint::yellow("No versions installed"));
+            return Ok(());
         }
-        vers.iter().for_each(|x| {
-            println!(
-                "{}",
-                yansi::Paint::cyan(x.to_str().unwrap_or(&x.to_string_lossy()))
-            )
+        let current = versions::current_version(&config.base_dir.bin).unwrap_or(None);
+
+        vers.into_iter().for_each(|v| {
+            let s = v.to_str();
+            if Some(v) == current {
+                println!(
+                    " {}",
+                    Paint::cyan(format!("{s} {}", Paint::new("current").dimmed()))
+                );
+            } else {
+                println!(" {s}");
+            }
         });
 
         Ok(())
