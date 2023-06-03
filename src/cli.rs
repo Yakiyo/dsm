@@ -18,7 +18,7 @@ pub struct Cli {
 
 #[derive(Parser, Debug)]
 pub struct DsmConfig {
-    /// Override the architecture to be used. Defaults to the system arch.
+    /// The architecture to use. Defaults to the system arch.
     #[clap(
         long,
         env = "DSM_ARCH",
@@ -30,7 +30,7 @@ pub struct DsmConfig {
     )]
     pub arch: Arch,
 
-    /// The root directory of dsm installations.
+    /// Dsm directory. Defaults to `~/.dsm`
     #[clap(
         long = "dsm-dir",
         env = "DSM_DIR",
@@ -41,6 +41,13 @@ pub struct DsmConfig {
         hide_env_values = true
     )]
     pub base_dir: DsmDir,
+
+    #[clap(
+        long = "no-colors",
+        env = "DSM_COLORS",
+        global = true,
+    )]
+    pub disable_colors: bool,
 }
 
 #[derive(Subcommand, Debug)]

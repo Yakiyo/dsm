@@ -15,8 +15,17 @@ mod shell;
 mod versions;
 
 fn main() {
-    yansi::Paint::enable_windows_ascii();
-
     let args = cli::parse();
+    
+    if &args.config.disable_colors == &true {
+        yansi::Paint::disable();
+    }
+    #[cfg(windows)] {
+        // If ansi escape sequences are not supported, disable colors on windows
+        if !yansi::Paint::enable_windows_ascii() {
+            yansi::Paint::disable();
+        }
+    }
+
     args.handle_sub();
 }
