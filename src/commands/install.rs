@@ -24,8 +24,8 @@ impl super::Command for Install {
 
         install_dart_sdk(&self.version, &config)?;
         println!(
-            "Successfully installed Dart SDK v{}",
-            Paint::green(&self.version)
+            "Successfully installed Dart SDK {}",
+            Paint::green(format!("v{}", &self.version))
         );
         Ok(())
     }
