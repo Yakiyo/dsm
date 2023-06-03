@@ -1,7 +1,7 @@
-use anyhow::Context;
+use crate::dirs::DsmDir;
 use crate::error;
 use crate::platform::platform_name;
-use crate::dirs::DsmDir;
+use anyhow::Context;
 
 #[cfg(windows)]
 pub const AVAILABLE_SHELLS: &[&str; 5] = &["cmd", "powershell", "bash", "zsh", "fish"];

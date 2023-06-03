@@ -42,7 +42,7 @@ pub fn platform_arch() -> &'static str {
 }
 
 /// All supported archs. This are the ones dart binaries are built for.
-pub const SUPPORT_ARCHS: &[&str; 4] = &["arm", "arm64", "x64", "ia32"];
+pub const SUPPORTED_ARCHS: &[&str; 4] = &["arm", "arm64", "x64", "ia32"];
 
 #[derive(Debug, Clone)]
 pub enum Arch {
@@ -74,7 +74,7 @@ impl std::str::FromStr for Arch {
             "ia32" => Ok(Arch::Ia32),
             unknown => Err(anyhow::anyhow!(
                 "Unknown arch {unknown}. Must be one of {}",
-                SUPPORT_ARCHS.join(", ")
+                SUPPORTED_ARCHS.join(", ")
             )),
         }
     }
@@ -84,28 +84,3 @@ impl std::fmt::Display for Arch {
         write!(f, "{}", self.to_str())
     }
 }
-
-// #[derive(Debug)]
-// pub struct ArchErr {
-//     pub message: String,
-// }
-
-// impl ArchErr {
-//     fn new(msg: &str) -> ArchErr {
-//         ArchErr {
-//             message: msg.to_string(),
-//         }
-//     }
-// }
-
-// impl std::error::Error for ArchErr {
-//     fn description(&self) -> &str {
-//         &self.message
-//     }
-// }
-
-// impl std::fmt::Display for ArchErr {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         write!(f, "{}", self.message)
-//     }
-// }

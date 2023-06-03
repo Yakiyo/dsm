@@ -1,5 +1,6 @@
 use crate::error;
 use crate::platform::platform_name;
+use anyhow::Context;
 use dart_semver::Version;
 use std::path::PathBuf;
 
@@ -8,8 +9,8 @@ use std::path::PathBuf;
 /// - root
 ///   - bin // a symlink to the `bin` directory in an installation dir
 ///   - installations
-///     - vX.Y.Z
-///     - vA.B.C
+///     - X.Y.Z
+///     - A.B.C
 #[derive(Debug, Clone)]
 pub struct DsmDir {
     pub root: PathBuf,
@@ -50,11 +51,14 @@ impl std::str::FromStr for DsmDir {
 
 impl std::default::Default for DsmDir {
     fn default() -> Self {
-        DsmDir::from(
-            [home_dir().to_str().unwrap(), ".dsm"]
-                .iter()
-                .collect::<PathBuf>(),
-        )
+        let home = match home_dir() {
+            Ok(t) => t,
+            Err(e) => {
+                error!("{e}");
+            }
+        };
+
+        DsmDir::from([home.to_str().unwrap(), ".dsm"].iter().collect::<PathBuf>())
     }
 }
 
@@ -82,19 +86,15 @@ impl DsmDir {
 
 // https://stackoverflow.com/a/25498458/17990034
 /// Get home dir path
-pub fn home_dir() -> PathBuf {
+pub fn home_dir() -> anyhow::Result<PathBuf> {
     use std::env;
     let var = match platform_name() {
         "windows" => "UserProfile",
         "linux" | "macos" => "HOME",
-        _ => {
-            error!("Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm");
-        }
+        _ => return Err(anyhow::anyhow!("Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm"))
     };
 
-    let home_path = env::var(var);
-    if home_path.is_err() {
-        error!("Cannot read home directory. Consider manually setting the value of `DSM_DIR`");
-    }
-    PathBuf::from(home_path.unwrap())
+    let home_path = env::var(var)
+        .context("Cannot read home directory. Consider manually setting the value of `DSM_DIR`")?;
+    Ok(PathBuf::from(home_path))
 }

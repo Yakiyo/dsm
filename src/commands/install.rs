@@ -7,6 +7,7 @@ use anyhow::Context;
 use dart_semver::Version;
 use spinners::{Spinner, Spinners};
 use std::io::Write;
+use yansi::Paint;
 use zip::read::ZipArchive;
 
 #[derive(clap::Args, Debug, Default)]
@@ -20,18 +21,12 @@ impl super::Command for Install {
         let dir = &config.base_dir;
 
         dir.ensure_dirs().context("Failed to setup dsm dirs")?;
-        let mut sp = Spinner::new(
-            Spinners::Line,
-            format!("Downloading Dart SDK {}", self.version),
+
+        install_dart_sdk(&self.version, &config)?;
+        println!(
+            "Successfully installed Dart SDK v{}",
+            Paint::green(&self.version)
         );
-
-        if let Err(e) = install_dart_sdk(&self.version, &config) {
-            sp.stop_with_message("".into());
-            return Err(e);
-        }
-
-        sp.stop_and_persist("✔", format!("Downloaded Dart SDK version {}", self.version));
-
         Ok(())
     }
 }
@@ -43,9 +38,16 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
         return Err(anyhow::anyhow!("Version {version} is already installed. For reinstalling, please uninstall first then install again."));
     }
 
-    let archive = fetch_bytes(archive_url(version, &config.arch))?;
+    let mut sp = Spinner::new(
+        Spinners::Line,
+        format!("Downloading Dart SDK {}", Paint::cyan(version)),
+    );
 
-    debug!("Writing archive file to tempfile");
+    let archive = fetch_bytes(archive_url(version, &config.arch))
+        .context("No Dart SDK available with provided arch type or version.")?;
+    sp.stop_and_persist("✔", format!("Downloaded Dart SDK version {}", version));
+
+    let mut sp = Spinner::new(Spinners::Line, "Extracting files".into());
 
     let mut tmp = tempfile::tempfile().context("Failed to create temporary file")?;
     let tmp_dir = tempfile::tempdir_in(&config.base_dir.installation_dir)
@@ -58,6 +60,8 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
         .context("Failed to read ZipArchive")?
         .extract(&tmp_dir)
         .context("Failed to extract content from zip file")?;
+
+    sp.stop_and_persist("✔", "Extracted files".into());
 
     std::fs::rename(tmp_dir.path().join("dart-sdk"), p)
         .context("Failed to copy extracted files to installation dir.")?;

@@ -28,7 +28,7 @@ impl super::Command for Use {
     }
 }
 
-/// Remove if prev symlink exists and symlinks the target versions bin directory
+/// Remove prev symlink if it exists and symlink the target versions bin directory
 fn replace_symlink(dirs: &DsmDir, version: &Version) -> anyhow::Result<()> {
     let from = dirs.installation_dir.join(version.to_str()).join("bin");
     let to = &dirs.bin;
