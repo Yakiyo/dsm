@@ -14,7 +14,7 @@ mod http;
 mod log;
 mod platform;
 mod shell;
-mod versions;
+mod version;
 
 fn main() {
     let args = cli::parse();
