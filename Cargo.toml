@@ -1,8 +1,12 @@
 [package]
 name = "dsm"
+description = "Simplified version manager for the Dart SDK"
 version = "0.1.0"
 authors = ["Yakiyo <yakiyo1206@gmail.com>"]
-edition = "2018"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/Yakiyo/dsm"
+homepage = "https://github.com/Yakiyo/dsm"
 
 [dependencies]
 anyhow = "1.0.71"
