@@ -17,7 +17,7 @@ mod versions;
 fn main() {
     let args = cli::parse();
 
-    if &args.config.disable_colors == &true {
+    if args.config.disable_colors {
         yansi::Paint::disable();
     }
     #[cfg(windows)]
