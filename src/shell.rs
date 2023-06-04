@@ -78,19 +78,13 @@ impl Shell {
     pub fn setup_envs(&self, dirs: &DsmDir) -> anyhow::Result<String> {
         let s = match self {
             Shell::Bash => {
-                format!(
-                    "export PATH={:?}:$PATH",
-                    dirs.bin.as_os_str()
-                )
+                format!("export PATH={:?}:$PATH", dirs.bin.as_os_str())
             }
             Shell::Zsh => {
                 format!("export PATH={:?}:$PATH", dirs.bin.as_os_str())
             }
             Shell::Fish => {
-                format!(
-                    "set -gx PATH {:?} $PATH",
-                    dirs.bin.as_os_str()
-                )
+                format!("set -gx PATH {:?} $PATH", dirs.bin.as_os_str())
             }
             Shell::Powershell => {
                 let current_path =
@@ -103,9 +97,7 @@ impl Shell {
                 let new_path = std::env::join_paths(split_paths)
                     .map_err(|e| anyhow::anyhow!("Can't join paths. Source: {}", e))?;
 
-                format!(
-                    "$env:PATH = {new_path:?}"
-                )
+                format!("$env:PATH = {new_path:?}")
             }
             Shell::Cmd => {
                 let current_path =
