@@ -18,5 +18,12 @@ jobs:
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: nightly
+
+      - name: Code Quality Check
+        run: cargo fmt --check
+
+      - name: Tests
+        run: cargo test
+        
       - name: Publish to crates.io
-        run: cargo publish --token ${{ env.CARGO_TOKEN }} --dry-run
+        run: cargo publish --token ${{ env.CARGO_TOKEN }}
