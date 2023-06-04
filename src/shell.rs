@@ -79,8 +79,7 @@ impl Shell {
         let s = match self {
             Shell::Bash => {
                 format!(
-                    "# Add this in your .bashrc file as `eval $(dsm env bash)`\n\n\
-                    export PATH={:?}:$PATH",
+                    "export PATH={:?}:$PATH",
                     dirs.bin.as_os_str()
                 )
             }
@@ -89,8 +88,7 @@ impl Shell {
             }
             Shell::Fish => {
                 format!(
-                    "# Add this in your fish config file as `dsm env fish | source`\n\n\
-                    set -gx PATH {:?} $PATH",
+                    "set -gx PATH {:?} $PATH",
                     dirs.bin.as_os_str()
                 )
             }
@@ -106,9 +104,7 @@ impl Shell {
                     .map_err(|e| anyhow::anyhow!("Can't join paths. Source: {}", e))?;
 
                 format!(
-                    "# Add this to your powershell profile as \
-                    `dsm env powershell | Out-String | Invoke-Expression`\n\n\
-                    $env:PATH = {new_path:?}"
+                    "$env:PATH = {new_path:?}"
                 )
             }
             Shell::Cmd => {
