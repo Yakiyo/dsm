@@ -6,3 +6,6 @@
 
 # Pub lock file
 pubspec.lock
+
+# Test dumps
+image.png
