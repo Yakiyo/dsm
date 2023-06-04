@@ -7,6 +7,14 @@ edition = "2021"
 license = "MIT"
 repository = "https://github.com/Yakiyo/dsm"
 homepage = "https://github.com/Yakiyo/dsm"
+exclude = [
+    ".devcontainer/**",
+    ".github/**",
+    ".vscode/**",
+    "test/**",
+    "pubspec.*",
+    ".gitignore",
+]
 
 [dependencies]
 anyhow = "1.0.71"
