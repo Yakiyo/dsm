@@ -15,8 +15,8 @@ impl UserVersion {
         let lowercased = s.to_lowercase();
 
         let v = DartVersion::parse(&lowercased);
-        if v.is_ok() {
-            return Ok(Self::Version(v.unwrap()));
+        if let Ok(v) = v {
+            return Ok(Self::Version(v));
         }
         Ok(Self::Alias(lowercased))
     }

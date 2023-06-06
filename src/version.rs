@@ -53,12 +53,12 @@ pub fn current_version<P: AsRef<Path>>(bin: P) -> anyhow::Result<Option<DartVers
     Ok(Some(version))
 }
 
-pub fn _alias_to_version<'a, P: AsRef<Path>>(
+pub fn _alias_to_version<P: AsRef<Path>>(
     installation_dir: P,
-    alias: &'a str,
+    alias: &str,
 ) -> anyhow::Result<Option<DartVersion>> {
     let installation_dir = installation_dir.as_ref();
-    let alias_path = installation_dir.join(&alias);
+    let alias_path = installation_dir.join(alias);
     if !(alias_path.exists() && alias_path.is_symlink()) {
         return Err(anyhow::anyhow!("No version with name {alias} exists"));
     }
