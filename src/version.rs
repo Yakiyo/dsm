@@ -39,17 +39,17 @@ pub fn current_version<P: AsRef<Path>>(bin: P) -> anyhow::Result<Option<DartVers
         return Ok(None);
     }
 
-    let original = std::fs::read_link(bin).context("Failed to read symlink")?;
+    let original = std::fs::read_link(bin).with_context(|| "Failed to read symlink")?;
 
     let dir_name = original
         .parent()
-        .context("Installed version seems to be at root. Something seems wrong.")?
+        .with_context(|| "Installed version seems to be at root. Something seems wrong.")?
         .file_name()
-        .context("Unexpected error while trying to read dir name.")?
+        .with_context(|| "Unexpected error while trying to read dir name.")?
         .to_str()
-        .context("Unexpected error. Directory name isnt valid utf-8")?;
+        .with_context(|| "Unexpected error. Directory name isnt valid utf-8")?;
 
-    let version = DartVersion::parse(dir_name).context("Invalid version.")?;
+    let version = DartVersion::parse(dir_name).with_context(|| "Invalid version.")?;
     Ok(Some(version))
 }
 
@@ -62,14 +62,14 @@ pub fn _alias_to_version<P: AsRef<Path>>(
     if !(alias_path.exists() && alias_path.is_symlink()) {
         return Err(anyhow::anyhow!("No version with name {alias} exists"));
     }
-    let original = std::fs::read_link(alias_path).context("Failed to read symlink")?;
+    let original = std::fs::read_link(alias_path).with_context(|| "Failed to read symlink")?;
     let original = original
         .file_name()
-        .context("Unexpected error while trying to read version dirs file name")?
+        .with_context(|| "Unexpected error while trying to read version dirs file name")?
         .to_str()
-        .context("Failed to convert version dir name to str")?;
+        .with_context(|| "Failed to convert version dir name to str")?;
 
-    Ok(Some(DartVersion::parse(original).context(
-        "Alias directory does not link to a valid version directory",
-    )?))
+    Ok(Some(DartVersion::parse(original).with_context(|| {
+        "Alias directory does not link to a valid version directory"
+    })?))
 }

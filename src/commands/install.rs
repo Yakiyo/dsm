@@ -20,7 +20,8 @@ impl super::Command for Install {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
         let dir = &config.base_dir;
 
-        dir.ensure_dirs().context("Failed to setup dsm dirs")?;
+        dir.ensure_dirs()
+            .with_context(|| "Failed to setup dsm dirs")?;
 
         install_dart_sdk(&self.version, &config)?;
         println!(
@@ -44,27 +45,27 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
     );
 
     let archive = fetch_bytes(archive_url(version, &config.arch))
-        .context("No Dart SDK available with provided arch type or version.")?;
+        .with_context(|| "No Dart SDK available with provided arch type or version.")?;
     sp.stop_and_persist("✔", format!("Downloaded Dart SDK version {}", version));
 
     let mut sp = Spinner::new(Spinners::Line, "Extracting files".into());
 
-    let mut tmp = tempfile::tempfile().context("Failed to create temporary file")?;
+    let mut tmp = tempfile::tempfile().with_context(|| "Failed to create temporary file")?;
     let tmp_dir = tempfile::tempdir_in(&config.base_dir.installation_dir)
-        .context("Could not create tmp dir")?;
+        .with_context(|| "Could not create tmp dir")?;
 
     tmp.write_all(&archive)
-        .context("Failed to write contents to temp file")?;
+        .with_context(|| "Failed to write contents to temp file")?;
 
     ZipArchive::new(tmp)
-        .context("Failed to read ZipArchive")?
+        .with_context(|| "Failed to read ZipArchive")?
         .extract(&tmp_dir)
-        .context("Failed to extract content from zip file")?;
+        .with_context(|| "Failed to extract content from zip file")?;
 
     sp.stop_and_persist("✔", "Extracted files".into());
 
     std::fs::rename(tmp_dir.path().join("dart-sdk"), p)
-        .context("Failed to copy extracted files to installation dir.")?;
+        .with_context(|| "Failed to copy extracted files to installation dir.")?;
 
     if let Err(e) = tmp_dir.close() {
         debug!("Could not close temp dir. Please remove it manually\n{e}");

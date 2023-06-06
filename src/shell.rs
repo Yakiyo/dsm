@@ -88,7 +88,7 @@ impl Shell {
             }
             Shell::Powershell => {
                 let current_path =
-                    std::env::var_os("PATH").context("Failed to read current path")?;
+                    std::env::var_os("PATH").with_context(|| "Failed to read current path")?;
 
                 let mut split_paths: Vec<_> = std::env::split_paths(&current_path).collect();
                 let bin_path = std::path::PathBuf::from(&dirs.bin);
@@ -101,7 +101,7 @@ impl Shell {
             }
             Shell::Cmd => {
                 let current_path =
-                    std::env::var_os("PATH").context("Failed to read current path")?;
+                    std::env::var_os("PATH").with_context(|| "Failed to read current path")?;
 
                 let mut split_paths: Vec<_> = std::env::split_paths(&current_path).collect();
                 let bin_path = std::path::PathBuf::from(&dirs.bin);

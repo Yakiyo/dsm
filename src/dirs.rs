@@ -97,7 +97,8 @@ pub fn home_dir() -> anyhow::Result<PathBuf> {
         _ => return Err(anyhow::anyhow!("Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm"))
     };
 
-    let home_path = env::var(var)
-        .context("Cannot read home directory. Consider manually setting the value of `DSM_DIR`")?;
+    let home_path = env::var(var).with_context(|| {
+        "Cannot read home directory. Consider manually setting the value of `DSM_DIR`"
+    })?;
     Ok(PathBuf::from(home_path))
 }
