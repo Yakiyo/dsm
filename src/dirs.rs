@@ -8,6 +8,7 @@ use std::path::PathBuf;
 ///
 /// - root
 ///   - bin // a symlink to the `bin` directory in an installation dir
+///   - aliases
 ///   - installations
 ///     - X.Y.Z
 ///     - A.B.C
@@ -15,6 +16,7 @@ use std::path::PathBuf;
 pub struct DsmDir {
     pub root: PathBuf,
     pub installation_dir: PathBuf,
+    pub alias_dir: PathBuf,
     pub bin: PathBuf,
 }
 
@@ -25,6 +27,7 @@ impl std::convert::From<&str> for DsmDir {
             _ => DsmDir {
                 root: [value].iter().collect(),
                 installation_dir: [value, "installations"].iter().collect(),
+                alias_dir: [value, "aliases"].iter().collect(),
                 bin: [value, "bin"].iter().collect(),
             },
         }
@@ -35,7 +38,7 @@ impl std::convert::From<PathBuf> for DsmDir {
     fn from(value: PathBuf) -> Self {
         let value = value.to_str();
         if value.is_none() {
-            error!("Could not resolve provided value to string");
+            error!("Could not resolve path value to string");
         }
         DsmDir::from(value.unwrap())
     }
