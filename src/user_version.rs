@@ -5,7 +5,7 @@ use dart_semver::Version as DartVersion;
 /// Represents a user version
 pub enum UserVersion {
     Version(DartVersion),
-    Alias(String)
+    Alias(String),
 }
 
 impl UserVersion {
@@ -32,7 +32,6 @@ impl UserVersion {
         format!("{self}")
     }
 }
-
 
 impl std::str::FromStr for UserVersion {
     type Err = anyhow::Error;
