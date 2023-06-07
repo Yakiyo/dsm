@@ -16,7 +16,6 @@ mod log;
 mod platform;
 mod shell;
 mod user_version;
-mod version;
 
 fn main() {
     let args = cli::parse();

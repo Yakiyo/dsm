@@ -107,6 +107,36 @@ impl DsmDir {
         let version = Version::parse(dir_name).with_context(|| "Invalid version.")?;
         Ok(Some(version))
     }
+
+    /// List all installed versions
+    pub fn list_versions(&self) -> anyhow::Result<Vec<Version>> {
+        let mut vec: Vec<Version> = Vec::new();
+        let installation_dir = &self.installations;
+        if !installation_dir.exists() {
+            return Ok(vec);
+        }
+        for result_entry in installation_dir.read_dir()? {
+            let entry = result_entry?;
+            if entry
+                .file_name()
+                .to_str()
+                .map_or(false, |f| f.starts_with('.'))
+            {
+                continue;
+            }
+
+            let entry = entry.path();
+
+            let file_name = entry
+                .file_name()
+                .ok_or(anyhow::anyhow!("Unable to read filename."))?
+                .to_str()
+                .ok_or(anyhow::anyhow!("Could not convert file name to str"))?;
+            let version = Version::parse(file_name)?;
+            vec.push(version);
+        }
+        Ok(vec)
+    }
 }
 
 // https://stackoverflow.com/a/25498458/17990034
