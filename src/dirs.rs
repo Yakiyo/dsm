@@ -78,7 +78,7 @@ impl DsmDir {
         self.installations.join(version.to_str())
     }
 
-    /// Ensure all dirs exist. Create if it doesnt exist. 
+    /// Ensure all dirs exist. Create if it doesnt exist.
     pub fn ensure_dirs(&self) -> Result<(), std::io::Error> {
         std::fs::create_dir_all(&self.root)?;
         std::fs::create_dir_all(&self.installations)?;

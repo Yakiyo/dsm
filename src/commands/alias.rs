@@ -16,7 +16,11 @@ impl super::Command for Alias {
             debug!("Alias with that name already exists. Overwriting it.");
         }
         alias::create_alias(&config.base_dir, &self.version, &self.name)?;
-        println!("Created alias for {} with name {}", Paint::blue(format!("v{}", self.version)), Paint::blue(self.name));
+        println!(
+            "Created alias for {} with name {}",
+            Paint::blue(format!("v{}", self.version)),
+            Paint::blue(self.name)
+        );
         Ok(())
     }
 }
