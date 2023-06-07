@@ -8,7 +8,7 @@ pub struct List;
 
 impl super::Command for List {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
-        let installation_dir = &config.base_dir.installations;
+        let _installation_dir = &config.base_dir.installations;
         let vers = config.base_dir.list_versions()?;
         if vers.is_empty() {
             println!("{}", Paint::yellow("No versions installed"));
@@ -36,7 +36,7 @@ impl super::Command for List {
 }
 
 /// Generate hasmap of aliases
-fn alias_hash<P: AsRef<std::path::Path>>(
+fn _alias_hash<P: AsRef<std::path::Path>>(
     alias_dir: P,
 ) -> anyhow::Result<HashMap<String, Vec<alias::Alias>>> {
     let mut aliases = alias::list_aliases(alias_dir.as_ref())?;
