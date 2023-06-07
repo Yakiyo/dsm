@@ -5,6 +5,7 @@
 
 #![doc = include_str!("../README.md")]
 
+mod alias;
 mod arch;
 mod cli;
 mod commands;

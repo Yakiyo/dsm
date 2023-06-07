@@ -73,18 +73,39 @@ impl std::fmt::Display for DsmDir {
 }
 
 impl DsmDir {
+    /// Find the installation path to a version
     pub fn find_version_dir(&self, version: &Version) -> PathBuf {
-        [&self.installations, &PathBuf::from(version.to_str())]
-            .iter()
-            .collect()
+        self.installations.join(version.to_str())
     }
 
+    /// Ensure all dirs exist. Create if it doesnt exist. 
     pub fn ensure_dirs(&self) -> Result<(), std::io::Error> {
         std::fs::create_dir_all(&self.root)?;
         std::fs::create_dir_all(&self.installations)?;
         std::fs::create_dir_all(&self.aliases)?;
         std::fs::create_dir_all(&self.bin)?;
         Ok(())
+    }
+
+    /// Find current version in use
+    pub fn current_version(&self) -> anyhow::Result<Option<Version>> {
+        let bin = &self.bin;
+        if !(bin.exists() && bin.is_symlink()) {
+            return Ok(None);
+        }
+
+        let original = std::fs::read_link(bin).with_context(|| "Failed to read symlink")?;
+
+        let dir_name = original
+            .parent()
+            .with_context(|| "Installed version seems to be at root. Something seems wrong.")?
+            .file_name()
+            .with_context(|| "Unexpected error while trying to read dir name.")?
+            .to_str()
+            .with_context(|| "Unexpected error. Directory name isnt valid utf-8")?;
+
+        let version = Version::parse(dir_name).with_context(|| "Invalid version.")?;
+        Ok(Some(version))
     }
 }
 

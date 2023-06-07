@@ -77,6 +77,14 @@ pub enum SubCommand {
     /// Prints the current version in use
     #[clap(name = "current")]
     Current(commands::current::Current),
+
+    /// Create an alias to an existing version
+    #[clap(name = "alias")]
+    Alias(commands::alias::Alias),
+
+    /// Create an alias to an existing version
+    #[clap(name = "unalias")]
+    Unlias(commands::unalias::Unalias),
 }
 
 impl Cli {
@@ -88,6 +96,8 @@ impl Cli {
             SubCommand::List(e) => e.handle(self.config),
             SubCommand::Env(e) => e.handle(self.config),
             SubCommand::Current(e) => e.handle(self.config),
+            SubCommand::Alias(e) => e.handle(self.config),
+            SubCommand::Unlias(e) => e.handle(self.config),
         }
     }
 }

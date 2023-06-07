@@ -14,13 +14,13 @@ impl UserVersion {
         let s = s.as_ref();
         let lowercased = s.to_lowercase();
 
-        let v = DartVersion::parse(&lowercased);
-        if let Ok(v) = v {
+        if let Ok(v) = DartVersion::parse(&lowercased) {
             return Ok(Self::Version(v));
         }
         Ok(Self::Alias(lowercased))
     }
 
+    /// Returns the inner alias if exists
     pub fn alias_name(&self) -> Option<&String> {
         match self {
             UserVersion::Alias(e) => Some(e),
@@ -28,6 +28,7 @@ impl UserVersion {
         }
     }
 
+    /// Version to string
     pub fn to_str(&self) -> String {
         format!("{self}")
     }
@@ -43,7 +44,7 @@ impl std::str::FromStr for UserVersion {
 impl std::fmt::Display for UserVersion {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            UserVersion::Version(v) => write!(f, "{v}"),
+            UserVersion::Version(v) => write!(f, "v{v}"),
             UserVersion::Alias(a) => write!(f, "{a}"),
         }
     }

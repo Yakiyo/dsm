@@ -14,7 +14,7 @@ impl super::Command for List {
             println!("{}", Paint::yellow("No versions installed"));
             return Ok(());
         }
-        let current = version::current_version(&config.base_dir.bin).unwrap_or(None);
+        let current = config.base_dir.current_version().unwrap_or_else(|_| None);
 
         vers.into_iter().for_each(|v| {
             let s = v.to_str();

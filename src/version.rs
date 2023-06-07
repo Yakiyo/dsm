@@ -1,4 +1,3 @@
-use anyhow::Context;
 use dart_semver::Version as DartVersion;
 use std::path::Path;
 
@@ -30,46 +29,4 @@ pub fn list_versions<P: AsRef<Path>>(installation_dir: P) -> anyhow::Result<Vec<
         vec.push(version);
     }
     Ok(vec)
-}
-
-/// Find the current version in use
-pub fn current_version<P: AsRef<Path>>(bin: P) -> anyhow::Result<Option<DartVersion>> {
-    let bin = bin.as_ref();
-    if !(bin.exists() && bin.is_symlink()) {
-        return Ok(None);
-    }
-
-    let original = std::fs::read_link(bin).with_context(|| "Failed to read symlink")?;
-
-    let dir_name = original
-        .parent()
-        .with_context(|| "Installed version seems to be at root. Something seems wrong.")?
-        .file_name()
-        .with_context(|| "Unexpected error while trying to read dir name.")?
-        .to_str()
-        .with_context(|| "Unexpected error. Directory name isnt valid utf-8")?;
-
-    let version = DartVersion::parse(dir_name).with_context(|| "Invalid version.")?;
-    Ok(Some(version))
-}
-
-pub fn _alias_to_version<P: AsRef<Path>>(
-    installation_dir: P,
-    alias: &str,
-) -> anyhow::Result<Option<DartVersion>> {
-    let installation_dir = installation_dir.as_ref();
-    let alias_path = installation_dir.join(alias);
-    if !(alias_path.exists() && alias_path.is_symlink()) {
-        return Err(anyhow::anyhow!("No version with name {alias} exists"));
-    }
-    let original = std::fs::read_link(alias_path).with_context(|| "Failed to read symlink")?;
-    let original = original
-        .file_name()
-        .with_context(|| "Unexpected error while trying to read version dirs file name")?
-        .to_str()
-        .with_context(|| "Failed to convert version dir name to str")?;
-
-    Ok(Some(DartVersion::parse(original).with_context(|| {
-        "Alias directory does not link to a valid version directory"
-    })?))
 }
