@@ -15,8 +15,8 @@ use std::path::PathBuf;
 #[derive(Debug, Clone)]
 pub struct DsmDir {
     pub root: PathBuf,
-    pub installation_dir: PathBuf,
-    pub alias_dir: PathBuf,
+    pub installations: PathBuf,
+    pub aliases: PathBuf,
     pub bin: PathBuf,
 }
 
@@ -26,8 +26,8 @@ impl std::convert::From<&str> for DsmDir {
             "default" | "~" | "~/" => DsmDir::default(),
             _ => DsmDir {
                 root: [value].iter().collect(),
-                installation_dir: [value, "installations"].iter().collect(),
-                alias_dir: [value, "aliases"].iter().collect(),
+                installations: [value, "installations"].iter().collect(),
+                aliases: [value, "aliases"].iter().collect(),
                 bin: [value, "bin"].iter().collect(),
             },
         }
@@ -74,14 +74,15 @@ impl std::fmt::Display for DsmDir {
 
 impl DsmDir {
     pub fn find_version_dir(&self, version: &Version) -> PathBuf {
-        [&self.installation_dir, &PathBuf::from(version.to_str())]
+        [&self.installations, &PathBuf::from(version.to_str())]
             .iter()
             .collect()
     }
 
     pub fn ensure_dirs(&self) -> Result<(), std::io::Error> {
         std::fs::create_dir_all(&self.root)?;
-        std::fs::create_dir_all(&self.installation_dir)?;
+        std::fs::create_dir_all(&self.installations)?;
+        std::fs::create_dir_all(&self.aliases)?;
         std::fs::create_dir_all(&self.bin)?;
         Ok(())
     }

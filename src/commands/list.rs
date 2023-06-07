@@ -8,7 +8,7 @@ pub struct List;
 
 impl super::Command for List {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
-        let installation_dir = &config.base_dir.installation_dir;
+        let installation_dir = &config.base_dir.installations;
         let vers = version::list_versions(installation_dir)?;
         if vers.is_empty() {
             println!("{}", Paint::yellow("No versions installed"));

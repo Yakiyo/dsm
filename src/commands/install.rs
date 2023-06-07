@@ -51,7 +51,7 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
     let mut sp = Spinner::new(Spinners::Line, "Extracting files".into());
 
     let mut tmp = tempfile::tempfile().with_context(|| "Failed to create temporary file")?;
-    let tmp_dir = tempfile::tempdir_in(&config.base_dir.installation_dir)
+    let tmp_dir = tempfile::tempdir_in(&config.base_dir.installations)
         .with_context(|| "Could not create tmp dir")?;
 
     tmp.write_all(&archive)

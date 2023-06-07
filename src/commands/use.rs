@@ -30,7 +30,7 @@ impl super::Command for Use {
 
 /// Remove prev symlink if it exists and symlink the target versions bin directory
 fn replace_symlink(dirs: &DsmDir, version: &Version) -> anyhow::Result<()> {
-    let from = dirs.installation_dir.join(version.to_str()).join("bin");
+    let from = dirs.installations.join(version.to_str()).join("bin");
     let to = &dirs.bin;
     if to.exists() {
         crate::debug!("Removing previous link");
