@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use dart_semver::Version as DartVersion;
 
 /// Represents a user version
@@ -48,8 +46,4 @@ impl std::fmt::Display for UserVersion {
             UserVersion::Alias(a) => write!(f, "{a}"),
         }
     }
-}
-
-fn first_letter_is_number(s: &str) -> bool {
-    s.chars().next().map_or(false, |x| x.is_ascii_digit())
 }

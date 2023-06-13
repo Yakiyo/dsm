@@ -1,5 +1,3 @@
-#![allow(dead_code, unused_variables)]
-
 use crate::dirs::DsmDir;
 use crate::fs::symlink_dir;
 use anyhow::Context;
