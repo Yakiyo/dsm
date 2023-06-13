@@ -1,9 +1,9 @@
 use crate::arch::Arch;
 use crate::cli::DsmConfig;
-use crate::user_version::UserVersion;
 use crate::debug;
 use crate::http::fetch_bytes;
 use crate::platform::platform_name;
+use crate::user_version::UserVersion;
 use anyhow::Context;
 use dart_semver::Version;
 use std::io::Write;
@@ -20,7 +20,9 @@ impl super::Command for Install {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
         let version = match self.version {
             UserVersion::Version(v) => v,
-            UserVersion::Alias(_) => anyhow::bail!("Invalid version string provided. Must be a valid semver")
+            UserVersion::Alias(_) => {
+                anyhow::bail!("Invalid version string provided. Must be a valid semver")
+            }
         };
         let dir = &config.base_dir;
 
@@ -34,7 +36,10 @@ impl super::Command for Install {
         );
         let default_alias = &config.base_dir.aliases.join("default");
         if !default_alias.exists() {
-            debug!("Missing default alias. Assigning {} as default", &self.version);
+            debug!(
+                "Missing default alias. Assigning {} as default",
+                &self.version
+            );
             crate::alias::create_alias(dir, &version, "default")?;
         }
         Ok(())
@@ -53,7 +58,6 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
 
     let archive = fetch_bytes(archive_url(version, &config.arch))
         .with_context(|| "No Dart SDK available with provided arch type or version.")?;
-    
 
     println!("{info} Extracting files");
 
@@ -68,7 +72,6 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
         .with_context(|| "Failed to read ZipArchive")?
         .extract(&tmp_dir)
         .with_context(|| "Failed to extract content from zip file")?;
-
 
     std::fs::rename(tmp_dir.path().join("dart-sdk"), p)
         .with_context(|| "Failed to copy extracted files to installation dir.")?;
