@@ -15,7 +15,7 @@ pub struct Alias {
 
 impl Alias {
     pub fn v_str(&self) -> String {
-        format!("{}", &self.name)
+        (self.name).to_string()
     }
 }
 
@@ -28,7 +28,7 @@ impl std::convert::TryInto<Alias> for &std::path::Path {
             .with_context(|| "Unable to read path")?
             .to_str()
             .with_context(|| "Invalid dir name as alias")?;
-        let link = std::fs::read_link(&self)?;
+        let link = std::fs::read_link(self)?;
         let link = link
             .file_name()
             .with_context(|| "Unable to read file name for version directory")?
@@ -65,6 +65,6 @@ pub fn create_alias(dirs: &DsmDir, version: &Version, name: &str) -> anyhow::Res
     symlink_dir(version_dir, alias_dir).with_context(|| "Failed to create alias symlink")?;
     Ok(Alias {
         name: name.to_string(),
-        version: version.clone(),
+        version: *version,
     })
 }

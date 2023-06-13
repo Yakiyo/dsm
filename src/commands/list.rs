@@ -13,7 +13,7 @@ impl super::Command for List {
             println!("{}", Paint::yellow("No versions installed"));
             return Ok(());
         }
-        let current = config.base_dir.current_version().unwrap_or_else(|_| None);
+        let current = config.base_dir.current_version().unwrap_or(None);
         let alias_hash = create_alias_hash(&config.base_dir.aliases)?;
         for version in versions {
             let aliases = match alias_hash.get(&version.to_str()) {
@@ -21,7 +21,7 @@ impl super::Command for List {
                 Some(v) => {
                     let v_str = v
                         .iter()
-                        .map(|f| String::from(f))
+                        .map(String::from)
                         .collect::<Vec<_>>()
                         .join(" ");
                     format!("{}", Paint::new(v_str).dimmed())
