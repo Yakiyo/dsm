@@ -78,6 +78,11 @@ impl DsmDir {
         self.installations.join(version.to_str())
     }
 
+    pub fn find_alias_dir<S: AsRef<str>>(&self, alias_name: S) -> PathBuf {
+        let alias_name = alias_name.as_ref();
+        self.aliases.join(alias_name)
+    }
+
     /// Ensure all dirs exist. Create if it doesnt exist.
     pub fn ensure_dirs(&self) -> Result<(), std::io::Error> {
         std::fs::create_dir_all(&self.root)?;

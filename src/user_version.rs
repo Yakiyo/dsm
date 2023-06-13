@@ -1,6 +1,8 @@
+use crate::{alias::Alias, dirs::DsmDir};
 use dart_semver::Version as DartVersion;
 
 /// Represents a user version
+#[derive(Debug)]
 pub enum UserVersion {
     Version(DartVersion),
     Alias(String),
@@ -18,17 +20,23 @@ impl UserVersion {
         Ok(Self::Alias(lowercased))
     }
 
-    /// Returns the inner alias if exists
-    pub fn alias_name(&self) -> Option<&String> {
+    /// Version to string
+    pub fn to_str(&self) -> String {
         match self {
-            UserVersion::Alias(e) => Some(e),
-            _ => None,
+            UserVersion::Version(v) => format!("v{v}"),
+            UserVersion::Alias(a) => a.to_string(),
         }
     }
 
-    /// Version to string
-    pub fn to_str(&self) -> String {
-        format!("{self}")
+    /// Convert an alias to a version
+    pub fn to_version(&self, dirs: &DsmDir) -> anyhow::Result<DartVersion> {
+        match self {
+            UserVersion::Version(a) => Ok(*a),
+            UserVersion::Alias(a) => {
+                let alias: Alias = dirs.find_alias_dir(a).as_path().try_into()?;
+                Ok(alias.version)
+            }
+        }
     }
 }
 
@@ -41,9 +49,12 @@ impl std::str::FromStr for UserVersion {
 
 impl std::fmt::Display for UserVersion {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            UserVersion::Version(v) => write!(f, "v{v}"),
-            UserVersion::Alias(a) => write!(f, "{a}"),
-        }
+        write!(f, "{}", self.to_str())
+    }
+}
+
+impl std::default::Default for UserVersion {
+    fn default() -> Self {
+        UserVersion::Alias("default".into())
     }
 }
