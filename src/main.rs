@@ -18,6 +18,7 @@ mod shell;
 mod user_version;
 
 fn main() {
+    human_panic::setup_panic!();
     let args = cli::parse();
 
     if args.config.disable_colors {
@@ -27,6 +28,7 @@ fn main() {
     {
         // If ansi escape sequences are not supported, disable colors on windows
         if !yansi::Paint::enable_windows_ascii() {
+            debug!("Disabling colors in output due to terminal not supporting ascii sequences");
             yansi::Paint::disable();
         }
     }
