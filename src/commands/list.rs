@@ -19,11 +19,7 @@ impl super::Command for List {
             let aliases = match alias_hash.get(&version.to_str()) {
                 None => String::new(),
                 Some(v) => {
-                    let v_str = v
-                        .iter()
-                        .map(String::from)
-                        .collect::<Vec<_>>()
-                        .join(" ");
+                    let v_str = v.iter().map(String::from).collect::<Vec<_>>().join(" ");
                     format!("{}", Paint::new(v_str).dimmed())
                 }
             };
