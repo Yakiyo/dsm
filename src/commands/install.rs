@@ -1,11 +1,11 @@
 use crate::arch::Arch;
 use crate::cli::DsmConfig;
+use crate::user_version::UserVersion;
 use crate::debug;
 use crate::http::fetch_bytes;
 use crate::platform::platform_name;
 use anyhow::Context;
 use dart_semver::Version;
-use spinners::{Spinner, Spinners};
 use std::io::Write;
 use yansi::Paint;
 use zip::read::ZipArchive;
@@ -13,42 +13,49 @@ use zip::read::ZipArchive;
 #[derive(clap::Args, Debug, Default)]
 pub struct Install {
     /// The version to install.
-    pub version: Version,
+    pub version: UserVersion,
 }
 
 impl super::Command for Install {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
+        let version = match self.version {
+            UserVersion::Version(v) => v,
+            UserVersion::Alias(_) => anyhow::bail!("Invalid version string provided. Must be a valid semver")
+        };
         let dir = &config.base_dir;
 
         dir.ensure_dirs()
             .with_context(|| "Failed to setup dsm dirs")?;
 
-        install_dart_sdk(&self.version, &config)?;
+        install_dart_sdk(&version, &config)?;
         println!(
             "Successfully installed Dart SDK {}",
-            Paint::green(format!("v{}", &self.version))
+            Paint::green(format!("{}", &self.version))
         );
+        let default_alias = &config.base_dir.aliases.join("default");
+        if !default_alias.exists() {
+            debug!("Missing default alias. Assigning {} as default", &self.version);
+            crate::alias::create_alias(dir, &version, "default")?;
+        }
         Ok(())
     }
 }
 
 /// Install dart sdk
 fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()> {
+    let info = Paint::green("[INFO]");
     let p = config.base_dir.find_version_dir(version);
     if p.exists() {
         return Err(anyhow::anyhow!("Version {version} is already installed. For reinstalling, please uninstall first then install again."));
     }
 
-    let mut sp = Spinner::new(
-        Spinners::Line,
-        format!("Downloading Dart SDK {}", Paint::cyan(version)),
-    );
+    println!("{info} Downloading Dart SDK {}", Paint::cyan(version));
 
     let archive = fetch_bytes(archive_url(version, &config.arch))
         .with_context(|| "No Dart SDK available with provided arch type or version.")?;
-    sp.stop_and_persist("✔", format!("Downloaded Dart SDK version {}", version));
+    
 
-    let mut sp = Spinner::new(Spinners::Line, "Extracting files".into());
+    println!("{info} Extracting files");
 
     let mut tmp = tempfile::tempfile().with_context(|| "Failed to create temporary file")?;
     let tmp_dir = tempfile::tempdir_in(&config.base_dir.installations)
@@ -62,7 +69,6 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
         .extract(&tmp_dir)
         .with_context(|| "Failed to extract content from zip file")?;
 
-    sp.stop_and_persist("✔", "Extracted files".into());
 
     std::fs::rename(tmp_dir.path().join("dart-sdk"), p)
         .with_context(|| "Failed to copy extracted files to installation dir.")?;

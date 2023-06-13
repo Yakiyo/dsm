@@ -12,8 +12,9 @@ pub struct Alias {
 }
 
 impl Alias {
+    /// Inner version's string format
     pub fn v_str(&self) -> String {
-        (self.name).to_string()
+        (self.version).to_string()
     }
 }
 
@@ -39,6 +40,7 @@ impl std::convert::TryInto<Alias> for &std::path::Path {
     }
 }
 
+/// List all aliases
 pub fn list_aliases<P: AsRef<Path>>(alias_dir: P) -> anyhow::Result<Vec<Alias>> {
     let alias_dir = alias_dir.as_ref();
     let aliases: Vec<Alias> = std::fs::read_dir(alias_dir)?
