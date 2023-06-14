@@ -52,4 +52,4 @@ jobs:
         run: |
           git add .
           git commit -m "chore: Bump version and update changelog"
-          git push origin master
+          git push origin main
