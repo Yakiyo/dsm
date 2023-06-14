@@ -1,3 +1,6 @@
+# 0.1.2 (Unreleased)
+- TODO!
+
 # 0.1.1 (Unreleased)
 - Support aliases. Aliases can be created with the `alias` subcommand and removed via `unalias`
 - Better version handling. Most commands can now take aliases instead of versions as input (i.e. the uninstall and use command). Semver Versions can now also be followed by a `v` in the start without causing issues.
