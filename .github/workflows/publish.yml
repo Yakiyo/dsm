@@ -31,6 +31,9 @@ jobs:
       - name: Tests
         run: cargo test
 
+      - name: Install dart deps
+        run: dart pub get
+        
       - name: Pre Release script
         run: dart run tools/pre-release.dart
         
