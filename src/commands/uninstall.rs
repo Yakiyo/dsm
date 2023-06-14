@@ -21,10 +21,12 @@ impl super::Command for Uninstall {
             ));
         }
 
-        std::fs::remove_dir_all(p).context(format!(
-            "Could not delete installation dir for version {}",
-            Paint::red(&self.version)
-        ))?;
+        std::fs::remove_dir_all(p).with_context(|| {
+            format!(
+                "Could not delete installation dir for version {}",
+                Paint::red(&self.version)
+            )
+        })?;
         println!(
             "Successfully uninstalled Dart SDK version {} from system",
             Paint::green(&self.version)

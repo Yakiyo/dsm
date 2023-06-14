@@ -31,6 +31,13 @@ Then use the `use` command to activate it
 ```bash
 $ dsm use 3.0.3
 ```
+For creating aliases, use the `alias` and `unalias` commands
+```bash
+$ dsm alias 3.0.3 latest
+
+$ dsm unalias latest
+```
+
 Installed versions can be viewed with the `list` command. For uninstalling, use the `uninstall` command. Aliases are not yet supported but are planned. Due to lack of proper index of dart releases, shorthands like `latest` or `lts` are not possible but I'm trying to find a workaround for it.
 
 For a list of all commands, do `dsm --help`.

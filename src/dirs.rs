@@ -8,13 +8,15 @@ use std::path::PathBuf;
 ///
 /// - root
 ///   - bin // a symlink to the `bin` directory in an installation dir
+///   - aliases
 ///   - installations
 ///     - X.Y.Z
 ///     - A.B.C
 #[derive(Debug, Clone)]
 pub struct DsmDir {
     pub root: PathBuf,
-    pub installation_dir: PathBuf,
+    pub installations: PathBuf,
+    pub aliases: PathBuf,
     pub bin: PathBuf,
 }
 
@@ -24,7 +26,8 @@ impl std::convert::From<&str> for DsmDir {
             "default" | "~" | "~/" => DsmDir::default(),
             _ => DsmDir {
                 root: [value].iter().collect(),
-                installation_dir: [value, "installations"].iter().collect(),
+                installations: [value, "installations"].iter().collect(),
+                aliases: [value, "aliases"].iter().collect(),
                 bin: [value, "bin"].iter().collect(),
             },
         }
@@ -35,7 +38,7 @@ impl std::convert::From<PathBuf> for DsmDir {
     fn from(value: PathBuf) -> Self {
         let value = value.to_str();
         if value.is_none() {
-            error!("Could not resolve provided value to string");
+            error!("Could not resolve path value to string");
         }
         DsmDir::from(value.unwrap())
     }
@@ -70,17 +73,74 @@ impl std::fmt::Display for DsmDir {
 }
 
 impl DsmDir {
+    /// Find the installation path to a version
     pub fn find_version_dir(&self, version: &Version) -> PathBuf {
-        [&self.installation_dir, &PathBuf::from(version.to_str())]
-            .iter()
-            .collect()
+        self.installations.join(version.to_str())
     }
 
+    pub fn find_alias_dir<S: AsRef<str>>(&self, alias_name: S) -> PathBuf {
+        let alias_name = alias_name.as_ref();
+        self.aliases.join(alias_name)
+    }
+
+    /// Ensure all dirs exist. Create if it doesnt exist.
     pub fn ensure_dirs(&self) -> Result<(), std::io::Error> {
         std::fs::create_dir_all(&self.root)?;
-        std::fs::create_dir_all(&self.installation_dir)?;
+        std::fs::create_dir_all(&self.installations)?;
+        std::fs::create_dir_all(&self.aliases)?;
         std::fs::create_dir_all(&self.bin)?;
         Ok(())
+    }
+
+    /// Find current version in use
+    pub fn current_version(&self) -> anyhow::Result<Option<Version>> {
+        let bin = &self.bin;
+        if !(bin.exists() && bin.is_symlink()) {
+            return Ok(None);
+        }
+
+        let original = std::fs::read_link(bin).with_context(|| "Failed to read symlink")?;
+
+        let dir_name = original
+            .parent()
+            .with_context(|| "Installed version seems to be at root. Something seems wrong.")?
+            .file_name()
+            .with_context(|| "Unexpected error while trying to read dir name.")?
+            .to_str()
+            .with_context(|| "Unexpected error. Directory name isnt valid utf-8")?;
+
+        let version = Version::parse(dir_name).with_context(|| "Invalid version.")?;
+        Ok(Some(version))
+    }
+
+    /// List all installed versions
+    pub fn list_versions(&self) -> anyhow::Result<Vec<Version>> {
+        let mut vec: Vec<Version> = Vec::new();
+        let installation_dir = &self.installations;
+        if !installation_dir.exists() {
+            return Ok(vec);
+        }
+        for result_entry in installation_dir.read_dir()? {
+            let entry = result_entry?;
+            if entry
+                .file_name()
+                .to_str()
+                .map_or(false, |f| f.starts_with('.'))
+            {
+                continue;
+            }
+
+            let entry = entry.path();
+
+            let file_name = entry
+                .file_name()
+                .ok_or(anyhow::anyhow!("Unable to read filename."))?
+                .to_str()
+                .ok_or(anyhow::anyhow!("Could not convert file name to str"))?;
+            let version = Version::parse(file_name)?;
+            vec.push(version);
+        }
+        Ok(vec)
     }
 }
 
@@ -94,7 +154,8 @@ pub fn home_dir() -> anyhow::Result<PathBuf> {
         _ => return Err(anyhow::anyhow!("Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm"))
     };
 
-    let home_path = env::var(var)
-        .context("Cannot read home directory. Consider manually setting the value of `DSM_DIR`")?;
+    let home_path = env::var(var).with_context(|| {
+        "Cannot read home directory. Consider manually setting the value of `DSM_DIR`"
+    })?;
     Ok(PathBuf::from(home_path))
 }
