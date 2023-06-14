@@ -4,8 +4,5 @@
 # Dart builds
 .dart_tool/
 
-# Pub lock file
-pubspec.lock
-
 # Test dumps
 image.png
