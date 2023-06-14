@@ -9,3 +9,4 @@ dev_dependencies:
   test: ^1.21.0
 dependencies:
   toml: ^0.14.0
+  version: ^3.0.2
