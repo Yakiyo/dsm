@@ -70,7 +70,7 @@ impl std::str::FromStr for Arch {
         match s.to_lowercase().as_str() {
             "armv7" => Ok(Arch::Armv7),
             "arm64" => Ok(Arch::Arm64),
-            "x64" => Ok(Arch::X64),
+            "x64" | "x86" => Ok(Arch::X64),
             "ia32" => Ok(Arch::Ia32),
             unknown => Err(anyhow::anyhow!(
                 "Unknown arch {unknown}. Must be one of {}",
