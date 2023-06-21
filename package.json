@@ -1,0 +1,20 @@
+{
+  "name": "dsm",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "cargo check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yakiyo/dsm.git"
+  },
+  "author": "Yakiyo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Yakiyo/dsm/issues"
+  },
+  "homepage": "https://github.com/Yakiyo/dsm#readme",
+  "devDependencies": {
+    "@changesets/cli": "^2.26.1"
+  }
+}

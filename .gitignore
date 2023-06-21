@@ -6,3 +6,6 @@
 
 # Test dumps
 image.png
+
+# Node modules directory
+node_modules
