@@ -10,7 +10,7 @@
     "lint": "cargo clippy",
     "node": "node --loader @swc-node/register/esm",
     "fmt": "rome format . --write",
-    "bump": "changeset version && ./tools/version.ts"
+    "version": "changeset version && ./tools/version.ts"
   },
   "repository": {
     "type": "git",
