@@ -6,3 +6,4 @@ vscode:
   extensions:
     - bungcip.better-toml
     - serayuzgur.crates
+    - rome.rome
