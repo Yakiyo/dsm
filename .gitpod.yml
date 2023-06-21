@@ -1,3 +1,8 @@
+
 tasks:
   - name: Build Task
     init: cargo build
+vscode:
+  extensions:
+    - bungcip.better-toml
+    - serayuzgur.crates
