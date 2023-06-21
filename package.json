@@ -1,8 +1,10 @@
 {
   "name": "dsm",
-  "version": "0.0.0",
   "scripts": {
-    "test": "cargo check"
+    "prepare": "husky install",
+    "test": "cargo check",
+    "build": "cargo build",
+    "lint": "cargo clippy"
   },
   "repository": {
     "type": "git",
@@ -15,6 +17,7 @@
   },
   "homepage": "https://github.com/Yakiyo/dsm#readme",
   "devDependencies": {
-    "@changesets/cli": "^2.26.1"
+    "@changesets/cli": "^2.26.1",
+    "husky": "^8.0.3"
   }
 }
