@@ -1,4 +1,4 @@
-name: Publish
+name: publish
 
 on:
   push:
@@ -20,36 +20,11 @@ jobs:
           toolchain: nightly
           components: rustfmt
 
-      - name: Install Dart
-        uses: dart-lang/setup-dart@v1.3
-        with:
-          sdk: stable
-
       - name: Code Quality Check
         run: cargo fmt --check
 
       - name: Tests
         run: cargo test
-
-      - name: Install dart deps
-        run: dart pub get
-        
-      - name: Pre Release script
-        run: dart run tools/pre-release.dart
         
       - name: Publish to crates.io
         run: cargo publish --token ${{ env.CARGO_TOKEN }} --allow-dirty
-
-      - name: Post Release script
-        run: dart run tools/post-release.dart
-
-      - name: Setup git config
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
-
-      - name: Commit
-        run: |
-          git add .
-          git commit -m "chore: Bump version and update changelog"
-          git push origin main
