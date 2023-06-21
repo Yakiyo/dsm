@@ -9,7 +9,8 @@
     "build": "cargo build",
     "lint": "cargo clippy",
     "node": "node --loader @swc-node/register/esm",
-    "fmt": "rome format . --write"
+    "fmt": "rome format . --write",
+    "bump": "changeset version && ./tools/version.ts"
   },
   "repository": {
     "type": "git",
@@ -31,7 +32,6 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "cmd-ts": "^0.12.1",
     "toml": "^3.0.0"
   }
 }
