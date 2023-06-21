@@ -1,6 +1,7 @@
 {
   "name": "dsm",
   "version": "0.1.2",
+  "private": true,
   "scripts": {
     "prepare": "husky install",
     "test": "cargo check",
