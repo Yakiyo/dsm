@@ -1,0 +1,4 @@
+tasks:
+  - name: Build Task
+    init: cargo fetch
+    command: cargo build
