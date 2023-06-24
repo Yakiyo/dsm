@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::dirs::DsmDir;
 use crate::error;
 use crate::platform::platform_name;
@@ -75,7 +77,8 @@ impl std::fmt::Display for Shell {
 }
 
 impl Shell {
-    pub fn setup_envs(&self, dirs: &DsmDir) -> anyhow::Result<String> {
+    /// Add current installation dir to path
+    pub fn path(&self, dirs: &DsmDir) -> anyhow::Result<String> {
         let s = match self {
             Shell::Bash => {
                 format!("export PATH={:?}:$PATH", dirs.bin.as_os_str())
@@ -114,5 +117,31 @@ impl Shell {
             }
         };
         Ok(s)
+    }
+
+    /// Print environment variables
+    pub fn env_vars(&self, vars: &HashMap<&str, String>) {
+        match self {
+            Shell::Bash | Shell::Zsh => {
+                for (name, value) in vars {
+                    println!("export {name}={value}");
+                }
+            }
+            Shell::Fish => {
+                for (name, value) in vars {
+                    println!("set -gx {name} {value};");
+                }
+            }
+            Shell::Powershell => {
+                for (name, value) in vars {
+                    println!("$env:{name} = \"{value}\"");
+                }
+            }
+            Shell::Cmd => {
+                for (name, value) in vars {
+                    println!("SET {name}={value}");
+                }
+            }
+        }
     }
 }
