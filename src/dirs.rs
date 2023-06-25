@@ -84,11 +84,18 @@ impl DsmDir {
     }
 
     /// Ensure all dirs exist. Create if it doesnt exist.
-    pub fn ensure_dirs(&self) -> Result<(), std::io::Error> {
-        std::fs::create_dir_all(&self.root)?;
-        std::fs::create_dir_all(&self.installations)?;
-        std::fs::create_dir_all(&self.aliases)?;
-        std::fs::create_dir_all(&self.bin)?;
+    pub fn ensure_dirs(&self) -> anyhow::Result<()> {
+        let paths = [&self.root, &self.installations, &self.aliases, &self.bin];
+        let paths: Vec<&&PathBuf> = paths.iter().collect();
+        for path in paths {
+            if !path.exists() {
+                // Just to be on the safe side, remove the dir in case it exists
+                std::fs::remove_dir_all(path).unwrap_or_default();
+                std::fs::create_dir_all(&path).with_context(|| {
+                    format!("Failed to create dir for {}", &path.to_string_lossy())
+                })?;
+            }
+        }
         Ok(())
     }
 
