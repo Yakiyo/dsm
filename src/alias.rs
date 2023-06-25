@@ -2,6 +2,7 @@ use crate::dirs::DsmDir;
 use crate::fs::symlink_dir;
 use anyhow::Context;
 use dart_semver::Version;
+use std::collections::HashMap;
 use std::path::Path;
 
 /// Represents an alias with name `name` pointing to `version`
@@ -67,4 +68,20 @@ pub fn create_alias(dirs: &DsmDir, version: &Version, name: &str) -> anyhow::Res
         name: name.to_string(),
         version: *version,
     })
+}
+
+/// Generate hashmap of aliases
+pub fn create_alias_hash<P: AsRef<Path>>(
+    alias_dir: P,
+) -> anyhow::Result<HashMap<String, Vec<String>>> {
+    let mut aliases = list_aliases(alias_dir.as_ref())?;
+    let mut hashmap: HashMap<String, Vec<String>> = HashMap::with_capacity(aliases.len());
+    for alias in aliases.drain(..) {
+        if let Some(value) = hashmap.get_mut(&alias.version.to_str()) {
+            value.push(alias.name);
+        } else {
+            hashmap.insert(alias.version.to_str(), vec![alias.name]);
+        }
+    }
+    Ok(hashmap)
 }
