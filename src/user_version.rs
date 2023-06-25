@@ -2,14 +2,14 @@ use crate::alias::Alias;
 use crate::dirs::DsmDir;
 use crate::http;
 use anyhow::Context;
-use dart_semver::Version as DartVersion;
+use dart_semver::{Channel, Version as DartVersion};
 
 /// Represents a user version
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum UserVersion {
     Version(DartVersion),
     Alias(String),
-    Latest,
+    Latest(Channel),
 }
 
 impl UserVersion {
@@ -18,8 +18,15 @@ impl UserVersion {
         let s = s.as_ref();
         let lowercased = s.to_lowercase();
 
-        if lowercased == "latest" {
-            return Ok(Self::Latest);
+        if lowercased.starts_with("latest") {
+            if lowercased == "latest" {
+                return Ok(Self::Latest(Channel::Stable));
+            }
+            let lowercased: Channel = lowercased
+                .trim_start_matches("latest-")
+                .trim_start_matches("latest/")
+                .into();
+            return Ok(Self::Latest(lowercased));
         } else if let Ok(v) = DartVersion::parse(lowercased.trim_start_matches('v')) {
             return Ok(Self::Version(v));
         }
@@ -31,7 +38,7 @@ impl UserVersion {
         match self {
             UserVersion::Version(v) => format!("v{v}"),
             UserVersion::Alias(a) => a.to_string(),
-            UserVersion::Latest => "latest".to_string(),
+            UserVersion::Latest(c) => format!("latest-{c}"),
         }
     }
 
@@ -43,13 +50,13 @@ impl UserVersion {
                 let alias: Alias = dirs.unwrap().find_alias_dir(a).as_path().try_into()?;
                 Ok(alias.version)
             }
-            UserVersion::Latest => UserVersion::resolve_latest(),
+            UserVersion::Latest(c) => UserVersion::resolve_latest(c),
         }
     }
 
     /// Resolve to latest version
-    pub fn resolve_latest() -> anyhow::Result<DartVersion> {
-        DartVersion::parse(fetch_latest_version()?).with_context(|| "Invalid version string")
+    pub fn resolve_latest(channel: &Channel) -> anyhow::Result<DartVersion> {
+        DartVersion::parse(fetch_latest_version(channel)?).with_context(|| "Invalid version string")
     }
 }
 
@@ -73,10 +80,10 @@ impl std::default::Default for UserVersion {
 }
 
 /// Fetch the latest version for the stable dart sdk
-pub fn fetch_latest_version() -> anyhow::Result<String> {
-    let resp = http::fetch(
-        "https://storage.googleapis.com/dart-archive/channels/stable/release/latest/VERSION",
-    )
+pub fn fetch_latest_version(channel: &Channel) -> anyhow::Result<String> {
+    let resp = http::fetch(format!(
+        "https://storage.googleapis.com/dart-archive/channels/{channel}/release/latest/VERSION"
+    ))
     .with_context(|| "Failed to fetch latest version of the sdk")?;
     let json = resp
         .into_string()
@@ -95,7 +102,7 @@ mod tests {
 
     #[test]
     fn latest_version_test() {
-        let latest = fetch_latest_version();
+        let latest = fetch_latest_version(&Channel::Stable);
         let latest = latest.unwrap();
         let version = DartVersion::parse(latest).unwrap();
         assert!(version.is_stable());

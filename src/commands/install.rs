@@ -23,7 +23,7 @@ impl super::Command for Install {
             UserVersion::Alias(_) => {
                 anyhow::bail!("Invalid version string provided. Must be a valid semver")
             }
-            UserVersion::Latest => UserVersion::resolve_latest()?,
+            UserVersion::Latest(c) => UserVersion::resolve_latest(&c)?,
         };
         let dir = &config.base_dir;
 
@@ -42,6 +42,15 @@ impl super::Command for Install {
                 &self.version
             );
             crate::alias::create_alias(dir, &version, "default")?;
+        }
+        // If input was a latest-* patter, then create an associated alias to that
+        // version with that name
+        match self.version {
+            UserVersion::Latest(c) => {
+                debug!("Creating alias for latest-{c}");
+                crate::alias::create_alias(dir, &version, format!("latest-{c}").as_str())?;
+            }
+            _ => {}
         }
         Ok(())
     }
