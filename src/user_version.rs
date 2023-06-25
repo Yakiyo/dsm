@@ -82,7 +82,6 @@ pub fn fetch_latest_version() -> anyhow::Result<String> {
     )?))
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
