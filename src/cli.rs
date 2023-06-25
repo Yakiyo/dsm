@@ -85,6 +85,10 @@ pub enum SubCommand {
     /// Create an alias to an existing version
     #[clap(name = "unalias")]
     Unlias(commands::unalias::Unalias),
+
+    /// Check for new versions of the app
+    #[clap(name = "self")]
+    SelfSub(commands::self_sub::SelfSub),
 }
 
 impl Cli {
@@ -98,6 +102,7 @@ impl Cli {
             SubCommand::Current(e) => e.handle(self.config),
             SubCommand::Alias(e) => e.handle(self.config),
             SubCommand::Unlias(e) => e.handle(self.config),
+            SubCommand::SelfSub(e) => e.handle(self.config),
         }
     }
 }
