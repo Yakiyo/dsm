@@ -40,8 +40,8 @@ impl UserVersion {
             UserVersion::Alias(a) => {
                 let alias: Alias = dirs.find_alias_dir(a).as_path().try_into()?;
                 Ok(alias.version)
-            },
-            UserVersion::Latest => unimplemented!(),
+            }
+            UserVersion::Latest => unreachable!(),
         }
     }
 }
@@ -66,9 +66,9 @@ impl std::default::Default for UserVersion {
 }
 
 /// Fetch the latest version for the stable dart sdk
-fn fetch_latest_version() -> anyhow::Result<String> {
+pub fn fetch_latest_version() -> anyhow::Result<String> {
     let resp = http::fetch(
-        "https://storage.googleapis.com/dart-archive/channels/dev/release/latest/VERSION",
+        "https://storage.googleapis.com/dart-archive/channels/stable/release/latest/VERSION",
     )
     .with_context(|| "Failed to fetch latest version of the sdk")?;
     let json = resp
@@ -80,4 +80,18 @@ fn fetch_latest_version() -> anyhow::Result<String> {
     Ok(String::from(json["version"].as_str().with_context(
         || "Received non string value for version.",
     )?))
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn latest_version_test() {
+        let latest = fetch_latest_version();
+        let latest = latest.unwrap();
+        let version = DartVersion::parse(latest).unwrap();
+        assert!(version.is_stable());
+    }
 }
