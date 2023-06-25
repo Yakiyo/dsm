@@ -14,13 +14,13 @@ pub struct Use {
 
 impl super::Command for Use {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
-        let dir = &config.base_dir;
-        let version = self.version.to_version(dir)?;
-        let version_path = dir.find_version_dir(&version);
+        let dirs = &config.base_dir;
+        let version = self.version.to_version(Some(dirs))?;
+        let version_path = dirs.find_version_dir(&version);
         if !version_path.exists() {
             return Err(anyhow::anyhow!("Version {} is not installed. Cannot use it. View all available versions with the `ls` command.", Paint::cyan(&self.version)));
         }
-        replace_symlink(dir, &version)?;
+        replace_symlink(dirs, &version)?;
         println!(
             "Successfully set {} as current version",
             Paint::cyan(&self.version)

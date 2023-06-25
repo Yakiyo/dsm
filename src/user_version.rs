@@ -18,7 +18,9 @@ impl UserVersion {
         let s = s.as_ref();
         let lowercased = s.to_lowercase();
 
-        if let Ok(v) = DartVersion::parse(lowercased.trim_start_matches('v')) {
+        if lowercased == "latest" {
+            return Ok(Self::Latest);
+        } else if let Ok(v) = DartVersion::parse(lowercased.trim_start_matches('v')) {
             return Ok(Self::Version(v));
         }
         Ok(Self::Alias(lowercased))
@@ -34,15 +36,20 @@ impl UserVersion {
     }
 
     /// Convert an alias to a version
-    pub fn to_version(&self, dirs: &DsmDir) -> anyhow::Result<DartVersion> {
+    pub fn to_version(&self, dirs: Option<&DsmDir>) -> anyhow::Result<DartVersion> {
         match self {
             UserVersion::Version(a) => Ok(*a),
             UserVersion::Alias(a) => {
-                let alias: Alias = dirs.find_alias_dir(a).as_path().try_into()?;
+                let alias: Alias = dirs.unwrap().find_alias_dir(a).as_path().try_into()?;
                 Ok(alias.version)
             }
-            UserVersion::Latest => unreachable!(),
+            UserVersion::Latest => UserVersion::resolve_latest(),
         }
+    }
+
+    /// Resolve to latest version
+    pub fn resolve_latest() -> anyhow::Result<DartVersion> {
+        DartVersion::parse(fetch_latest_version()?).with_context(|| "Invalid version string")
     }
 }
 
