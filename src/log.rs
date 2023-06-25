@@ -3,7 +3,7 @@
 macro_rules! debug {
     ($($arg:expr),*) => {
         if std::env::var("DEBUG").is_ok() {
-            println!("{} {}", yansi::Paint::green("[INFO]"), format!($($arg),*));
+            println!("{} {}", yansi::Paint::yellow("[WARN]"), format!($($arg),*));
         }
     }
 }
