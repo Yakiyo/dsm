@@ -2,6 +2,7 @@ use crate::cli::DsmConfig;
 use yansi::Paint;
 
 pub mod alias;
+pub mod completions;
 pub mod current;
 pub mod env;
 pub mod install;
