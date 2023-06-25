@@ -9,6 +9,7 @@ use dart_semver::Version as DartVersion;
 pub enum UserVersion {
     Version(DartVersion),
     Alias(String),
+    Latest,
 }
 
 impl UserVersion {
@@ -28,6 +29,7 @@ impl UserVersion {
         match self {
             UserVersion::Version(v) => format!("v{v}"),
             UserVersion::Alias(a) => a.to_string(),
+            UserVersion::Latest => "latest".to_string(),
         }
     }
 
@@ -38,7 +40,8 @@ impl UserVersion {
             UserVersion::Alias(a) => {
                 let alias: Alias = dirs.find_alias_dir(a).as_path().try_into()?;
                 Ok(alias.version)
-            }
+            },
+            UserVersion::Latest => unimplemented!(),
         }
     }
 }

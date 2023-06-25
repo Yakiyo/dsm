@@ -22,7 +22,8 @@ impl super::Command for Install {
             UserVersion::Version(v) => v,
             UserVersion::Alias(_) => {
                 anyhow::bail!("Invalid version string provided. Must be a valid semver")
-            }
+            },
+            _ => unimplemented!()
         };
         let dir = &config.base_dir;
 
