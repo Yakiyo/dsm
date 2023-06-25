@@ -1,8 +1,8 @@
-use anyhow::Context;
-use yansi::Paint;
-
+use crate::alias;
 use crate::cli::DsmConfig;
+use anyhow::Context;
 use dart_semver::Version;
+use yansi::Paint;
 
 #[derive(clap::Args, Debug, Default)]
 pub struct Uninstall {
@@ -27,6 +27,21 @@ impl super::Command for Uninstall {
                 Paint::red(&self.version)
             )
         })?;
+
+        // Clean up aliases
+        let aliases = alias::create_alias_hash(&dir.aliases)
+            .with_context(|| "Failed to fetch aliases")?
+            .remove(&self.version.to_string())
+            .unwrap_or(Vec::new());
+
+        for alias in aliases {
+            let alias_dir = dir.find_alias_dir(alias);
+            if !alias_dir.exists() {
+                continue;
+            }
+            std::fs::remove_dir_all(alias_dir)?;
+        }
+
         println!(
             "Successfully uninstalled Dart SDK version {} from system",
             Paint::green(&self.version)
