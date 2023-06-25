@@ -1,4 +1,7 @@
-use crate::{alias::Alias, dirs::DsmDir};
+use crate::alias::Alias;
+use crate::dirs::DsmDir;
+use crate::http;
+use anyhow::Context;
 use dart_semver::Version as DartVersion;
 
 /// Represents a user version
@@ -57,4 +60,21 @@ impl std::default::Default for UserVersion {
     fn default() -> Self {
         UserVersion::Alias("default".into())
     }
+}
+
+/// Fetch the latest version for the stable dart sdk
+fn fetch_latest_version() -> anyhow::Result<String> {
+    let resp = http::fetch(
+        "https://storage.googleapis.com/dart-archive/channels/dev/release/latest/VERSION",
+    )
+    .with_context(|| "Failed to fetch latest version of the sdk")?;
+    let json = resp
+        .into_string()
+        .with_context(|| "Invalid string content in response body")?;
+    let json: serde_json::Value =
+        serde_json::from_str(json.as_str()).with_context(|| "Invalid json string")?;
+
+    Ok(String::from(json["version"].as_str().with_context(
+        || "Received non string value for version.",
+    )?))
 }
