@@ -28,3 +28,6 @@ panic = 'abort'
 codegen-units = 1
 lto = true
 strip = true
+
+[build-dependencies]
+clap_complete = "4.3.1"
