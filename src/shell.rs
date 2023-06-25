@@ -1,9 +1,8 @@
-use std::collections::HashMap;
-
 use crate::dirs::DsmDir;
 use crate::error;
 use crate::platform::platform_name;
 use anyhow::Context;
+use std::collections::HashMap;
 
 #[cfg(windows)]
 pub const AVAILABLE_SHELLS: &[&str; 5] = &["cmd", "powershell", "bash", "zsh", "fish"];

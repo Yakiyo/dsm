@@ -89,6 +89,10 @@ pub enum SubCommand {
     /// Check for new versions of the app
     #[clap(name = "self")]
     SelfSub(commands::self_sub::SelfSub),
+
+    /// Generate shell completion scripts
+    #[clap(name = "completions")]
+    Completions(commands::completions::Completions),
 }
 
 impl Cli {
@@ -103,6 +107,7 @@ impl Cli {
             SubCommand::Alias(e) => e.handle(self.config),
             SubCommand::Unlias(e) => e.handle(self.config),
             SubCommand::SelfSub(e) => e.handle(self.config),
+            SubCommand::Completions(e) => e.handle(self.config),
         }
     }
 }
