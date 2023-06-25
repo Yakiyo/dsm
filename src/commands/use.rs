@@ -10,6 +10,10 @@ use yansi::Paint;
 pub struct Use {
     /// The version to use
     version: UserVersion,
+
+    /// Remain silent if the current version is the same as the one to be used
+    #[clap(long, short = 's')]
+    silent_if_unchanged: bool,
 }
 
 impl super::Command for Use {
@@ -19,6 +23,13 @@ impl super::Command for Use {
         let version_path = dirs.find_version_dir(&version);
         if !version_path.exists() {
             return Err(anyhow::anyhow!("Version {} is not installed. Cannot use it. View all available versions with the `ls` command.", Paint::cyan(&self.version)));
+        }
+        let current = dirs.current_version().ok();
+        if Some(Some(version)) == current {
+            if !self.silent_if_unchanged {
+                println!("{} is already in use", &version);
+            }
+            return Ok(());
         }
         replace_symlink(dirs, &version)?;
         println!(
