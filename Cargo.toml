@@ -19,6 +19,7 @@ ureq = '2.6.2'
 yansi = '0.5.1'
 zip = '0.6.5'
 serde_json = "1.0.99"
+clap_complete = "4.3.1"
 
 [target.'cfg(windows)'.dependencies]
 junction = '1.0.0'
@@ -28,6 +29,3 @@ panic = 'abort'
 codegen-units = 1
 lto = true
 strip = true
-
-[build-dependencies]
-clap_complete = "4.3.1"
