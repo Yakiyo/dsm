@@ -1,0 +1,20 @@
+{
+  "$schema":"https://openapi.vercel.sh/vercel.json",
+  "github":{
+    "silent":true
+  },
+  "redirects":[
+    {
+      "source":"/",
+      "destination":"https://github.com/Yakiyo/dsm"
+    },
+    {
+      "source":"/install.sh",
+      "destination":"https://github.com/Yakiyo/dsm/raw/main/tools/install.sh"
+    },
+    {
+      "source":"/install.ps1",
+      "destination":"https://github.com/Yakiyo/dsm/raw/main/tools/install.ps1"
+    }
+  ]
+}
