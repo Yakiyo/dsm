@@ -15,7 +15,19 @@ FILE=""
 
 # TODO: Implement this
 show_help() {
-  echo "Help Message"
+  echo "dsm installation script"
+  echo ""
+  echo "USAGE:"
+  echo "  ./install.sh [OPTIONS]"
+  echo ""
+  echo "OPTIONS:"
+  echo "  -d, --install-dir Directory to install to."
+  echo "  -s, --skip-shell Skip shell setup"
+  echo "  -v, --version The version of dsm to install"
+  echo "  -F, --filename Manually override the filename of dsm to use."
+  echo ""
+  echo "For any queries, help or bug, please open an issue at https://github.com/Yakiyo/dsm/issues"
+
   exit 0
 }
 
