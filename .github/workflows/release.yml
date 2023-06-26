@@ -106,8 +106,7 @@ jobs:
           esac;
           BIN_NAME="${{ needs.crate_metadata.outputs.name }}${EXE_suffix}"
           BIN_PATH="target/${{ matrix.target }}/release/${BIN_NAME}"
-          BUILD_NAME="${{ needs.crate_metadata.outputs.name }}-${{
-          needs.crate_metadata.outputs.version }}-${{ matrix.target
+          BUILD_NAME="${{ needs.crate_metadata.outputs.name }}-${{ matrix.target
           }}${EXE_suffix}"
           mv ${BIN_PATH} ${BUILD_NAME}
 
