@@ -49,7 +49,7 @@ clap() {
       shift
       ;;
     -v | --version)
-      VERSION="$2"
+      VERSION="v$2"
       shift
       shift
       ;;
@@ -134,12 +134,12 @@ setup_shell() {
     echo ""
     echo '  # dsm'
     echo '  export PATH="'"$INSTALL_DIR"':$PATH"'
-    echo '  eval "`dsm env`"'
+    echo '  eval "`dsm env zsh`"'
 
     echo '' >>$CONF_FILE
     echo '# dsm' >>$CONF_FILE
     echo 'export PATH="'$INSTALL_DIR':$PATH"' >>$CONF_FILE
-    echo 'eval "`dsm env`"' >>$CONF_FILE
+    echo 'eval "`dsm env zsh`"' >>$CONF_FILE
 
   elif [ "$CURRENT_SHELL" = "fish" ]; then
     CONF_FILE=$HOME/.config/fish/conf.d/dsm.fish
@@ -148,14 +148,14 @@ setup_shell() {
     echo ""
     echo '  # dsm'
     echo '  set PATH "'"$INSTALL_DIR"'" $PATH'
-    echo '  dsm env | source'
+    echo '  dsm env fish | source'
 
     echo '# dsm' >>$CONF_FILE
     echo 'set PATH "'"$INSTALL_DIR"'" $PATH' >>$CONF_FILE
-    echo 'dsm env | source' >>$CONF_FILE
+    echo 'dsm env fish | source' >>$CONF_FILE
 
   elif [ "$CURRENT_SHELL" = "bash" ]; then
-    if [ "$OS" = "Darwin" ]; then
+    if [ "$OS" = "darwin" ]; then
       CONF_FILE=$HOME/.profile
     else
       CONF_FILE=$HOME/.bashrc
@@ -165,12 +165,12 @@ setup_shell() {
     echo ""
     echo '  # dsm'
     echo '  export PATH="'"$INSTALL_DIR"':$PATH"'
-    echo '  eval "`dsm env`"'
+    echo '  eval "`dsm env bash`"'
 
     echo '' >>$CONF_FILE
     echo '# dsm' >>$CONF_FILE
     echo 'export PATH="'"$INSTALL_DIR"':$PATH"' >>$CONF_FILE
-    echo 'eval "`dsm env`"' >>$CONF_FILE
+    echo 'eval "`dsm env bash`"' >>$CONF_FILE
 
   else
     echo "Could not infer shell type. Please set up manually."

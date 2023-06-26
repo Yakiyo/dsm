@@ -43,4 +43,3 @@ if (!(";${Path};".ToLower() -like "*;${InstallDir};*".ToLower())) {
 
 Write-Output "Successfully installed dsm"
 
-
