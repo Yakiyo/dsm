@@ -8,15 +8,15 @@ To quickly install dsm, you can use one of the following scripts
 
 #### bash (linux/macos/windows)
 ```bash
-$ curl -fsSL https://github.com/Yakiyo/dsm/raw/main/tools/install.sh | bash
+$ curl -fsSL https://dsm-vm.vercel.app/install.sh | bash
 ```
 The bash script works on windows too if you have git bash, since it comes with the associated utilities like `uname`, `curl` and others. The script accepts options like the `-F` or `--filename` flag to override what file to use (see the release section to see the available ones). Run the `--help` flag to see available ones. For example
-```
-$ curl -fsSL https://github.com/Yakiyo/dsm/raw/main/tools/install.sh | bash -s --install-dir "path/to/file" -F "x86_64-unknown-linux-musl" --skip-shell
+```bash
+$ curl -fsSL https://dsm-vm.vercel.app/install.sh | bash -s --install-dir "path/to/file" -F "x86_64-unknown-linux-musl" --skip-shell
 ```
 #### powershell (windows)
 ```powershell
-$ irm https://github.com/Yakiyo/dsm/raw/main/tools/install.ps1 | iex
+$ irm https://dsm-vm.vercel.app/install.ps1 | iex
 ```
 You can specify the version by declaring a `$v` variable beforehand and change the installation dir by a env variable named `DSM_INSTALL`
 ### crates.io:
