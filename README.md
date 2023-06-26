@@ -12,7 +12,7 @@ $ curl -fsSL https://dsm-vm.vercel.app/install.sh | bash
 ```
 The bash script works on windows too if you have git bash, since it comes with the associated utilities like `uname`, `curl` and others. The script accepts options like the `-F` or `--filename` flag to override what file to use (see the release section to see the available ones). Run the `--help` flag to see available ones. For example
 ```bash
-$ curl -fsSL https://dsm-vm.vercel.app/install.sh | bash -s --install-dir "path/to/file" -F "x86_64-unknown-linux-musl" --skip-shell
+$ curl -fsSL https://dsm-vm.vercel.app/install.sh | bash -s -- --install-dir "path/to/file" -F "x86_64-unknown-linux-musl" --skip-shell
 ```
 #### powershell (windows)
 ```powershell
