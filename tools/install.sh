@@ -49,7 +49,7 @@ clap() {
       shift
       ;;
     -v | --version)
-      VERSION="$2"
+      VERSION="v$2"
       shift
       shift
       ;;
