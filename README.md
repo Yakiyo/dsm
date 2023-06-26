@@ -4,7 +4,21 @@
 Simplified version manager for the Dart SDK. Inspired by [fnm](https://github.com/Schniz/fnm) and [nvm](https://github.com/nvm-sh/nvm). 
 
 ## Installation
+To quickly install dsm, you can use one of the following scripts
 
+#### bash (linux/macos/windows)
+```bash
+$ curl -fsSL https://github.com/Yakiyo/dsm/raw/main/tools/install.sh | bash
+```
+The bash script works on windows too if you have git bash, since it comes with the associated utilities like `uname`, `curl` and others. The script accepts options like the `-F` or `--filename` flag to override what file to use (see the release section to see the available ones). Run the `--help` flag to see available ones. For example
+```
+$ curl -fsSL https://github.com/Yakiyo/dsm/raw/main/tools/install.sh | bash -s --install-dir "path/to/file" -F "x86_64-unknown-linux-musl" --skip-shell
+```
+#### powershell (windows)
+```powershell
+$ irm https://github.com/Yakiyo/dsm/raw/main/tools/install.ps1 | iex
+```
+You can specify the version by declaring a `$v` variable beforehand and change the installation dir by a env variable named `DSM_INSTALL`
 ### crates.io:
 ```bash
 $ cargo install dsm
@@ -22,9 +36,6 @@ $ cargo build --release
 
 ### Pre-built binaries
 Pre-built binaries for some platforms are available in [github releases](https://github.com/Yakiyo/dsm/releases) section. You can download the file, rename it and add it to your system PATH.
-
-### Scripts
-Installation scripts will be added soon. If you'd like to contribute, please see https://github.com/Yakiyo/dsm/issues/10
 
 After installation, setup your shell as mentioned in [setup](#setup).
 
