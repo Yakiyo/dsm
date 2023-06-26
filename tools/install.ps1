@@ -32,7 +32,7 @@ if (!(Test-Path $InstallDir)) {
 
 Write-Output "Downloading from ${DownloadUrl}"
 
-curl.exe --progress-bar --fail -L $DownloadUrl -o "${InstallDir}\dsm.exe"
+irm $DownloadUrl -OutFile "${InstallDir}\dsm.exe"
 
 $User = [System.EnvironmentVariableTarget]::User
 $Path = [System.Environment]::GetEnvironmentVariable('Path', $User)
