@@ -1,5 +1,21 @@
 # dsm
 
+## 1.0.0
+
+### Major Changes
+
+- 490ac52: First stable release (v1.0.0)
+
+### Patch Changes
+
+- dfbce19: handle ensuring dsm dir better. print which dir actually throwed the error
+- dfbce19: Support sdk channels in latest. latest/dev or latest-beta patterns are now supported.
+- ef86c8a: clean up aliases after uninstalling
+- 7cc2504: Print necessary config envs of dsm when `dsm env` is used alongside bin path
+- 53fca11: create subcommand for checking new available versions of the app from gh
+- 4130af5: Shell script to install dsm
+- 0085fba: Generate completion scripts in runtime via the completions subcommand
+
 ## 0.1.2
 
 ### Patch Changes
@@ -11,7 +27,9 @@
 - 88f1e27: Better version handling. Take aliases as well semvers as inputs
 
 ## 0.1.1
+
 - More updates
 
 ## 0.1.0
+
 - Inital version
