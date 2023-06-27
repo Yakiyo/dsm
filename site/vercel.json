@@ -16,5 +16,9 @@
       "source":"/install.ps1",
       "destination":"https://github.com/Yakiyo/dsm/raw/main/tools/install.ps1"
     }
+  ],
+  "rewrites": [
+    { "source": "/install.sh", "destination": "/install.sh.txt" },
+    { "source": "/install.ps1", "destination": "/install.ps1.txt" }
   ]
 }

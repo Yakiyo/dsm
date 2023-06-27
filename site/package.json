@@ -1,0 +1,10 @@
+{
+    "name": "dsm",
+    "version": "0.0.0",
+    "main": "index.js",
+    "author": "Yakiyo <yakiyo1206@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+      "build": "rm -rf public; mkdir public; cp ../tools/install.sh ./public/install.sh.txt; cp ../tools/install.ps1 ./public/install.ps1.txt"
+    }
+  }
