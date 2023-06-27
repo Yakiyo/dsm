@@ -58,18 +58,17 @@ impl super::Command for Install {
 
 /// Install dart sdk
 fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()> {
-    let info = Paint::green("[INFO]");
     let p = config.base_dir.find_version_dir(version);
     if p.exists() {
         return Err(anyhow::anyhow!("Version {version} is already installed. For reinstalling, please uninstall first then install again."));
     }
 
-    println!("{info} Downloading Dart SDK {}", Paint::cyan(version));
+    println!("Downloading Dart SDK {}", Paint::cyan(version));
 
     let archive = fetch_bytes(archive_url(version, &config.arch))
         .with_context(|| "No Dart SDK available with provided arch type or version.")?;
 
-    println!("{info} Extracting files");
+    println!("Extracting files");
 
     let mut tmp = tempfile::tempfile().with_context(|| "Failed to create temporary file")?;
     let tmp_dir = tempfile::tempdir_in(&config.base_dir.installations)
