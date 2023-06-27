@@ -4,18 +4,7 @@
     "silent":true
   },
   "redirects":[
-    {
-      "source":"/",
-      "destination":"https://github.com/Yakiyo/dsm"
-    },
-    {
-      "source":"/install.sh",
-      "destination":"https://github.com/Yakiyo/dsm/raw/main/tools/install.sh"
-    },
-    {
-      "source":"/install.ps1",
-      "destination":"https://github.com/Yakiyo/dsm/raw/main/tools/install.ps1"
-    }
+    { "source":"/", "destination":"https://github.com/Yakiyo/dsm" }
   ],
   "rewrites": [
     { "source": "/install.sh", "destination": "/install.sh.txt" },
