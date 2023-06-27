@@ -27,9 +27,9 @@ fn fetch_gh_tag() -> anyhow::Result<String> {
     let resp = fetch("https://api.github.com/repos/Yakiyo/dsm/releases/latest")
         .with_context(|| "Unable to fetch latest app version from github.")?
         .into_string()
-        .with_context(|| format!("Response returned invalid text content."))?;
+        .with_context(|| "Response returned invalid text content.".to_string())?;
     let json: serde_json::Value =
-        serde_json::from_str(resp.as_str()).with_context(|| format!("Invalid json string"))?;
+        serde_json::from_str(resp.as_str()).with_context(|| "Invalid json string".to_string())?;
     Ok(String::from(
         json["tag_name"]
             .as_str()

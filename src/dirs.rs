@@ -91,7 +91,7 @@ impl DsmDir {
             if !path.exists() {
                 // Just to be on the safe side, remove the dir in case it exists
                 std::fs::remove_dir_all(path).unwrap_or_default();
-                std::fs::create_dir_all(&path).with_context(|| {
+                std::fs::create_dir_all(path).with_context(|| {
                     format!("Failed to create dir for {}", &path.to_string_lossy())
                 })?;
             }

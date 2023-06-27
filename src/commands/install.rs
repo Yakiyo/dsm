@@ -45,12 +45,9 @@ impl super::Command for Install {
         }
         // If input was a latest-* patter, then create an associated alias to that
         // version with that name
-        match self.version {
-            UserVersion::Latest(c) => {
-                debug!("Creating alias for latest-{c}");
-                crate::alias::create_alias(dir, &version, format!("latest-{c}").as_str())?;
-            }
-            _ => {}
+        if let UserVersion::Latest(c) = self.version {
+            debug!("Creating alias for latest-{c}");
+            crate::alias::create_alias(dir, &version, format!("latest-{c}").as_str())?;
         }
         Ok(())
     }
