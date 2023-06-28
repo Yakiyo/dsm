@@ -78,15 +78,16 @@ impl std::fmt::Display for Shell {
 impl Shell {
     /// Add current installation dir to path
     pub fn path(&self, dirs: &DsmDir) -> anyhow::Result<String> {
+        let path = dirs
+            .bin
+            .to_str()
+            .with_context(|| "Failed to read current path")?;
         let s = match self {
-            Shell::Bash => {
-                format!("export PATH={:?}:$PATH", dirs.bin.as_os_str())
-            }
-            Shell::Zsh => {
-                format!("export PATH={:?}:$PATH", dirs.bin.as_os_str())
+            Shell::Bash | Shell::Zsh => {
+                format!("export PATH={path:?}:$PATH")
             }
             Shell::Fish => {
-                format!("set -gx PATH {:?} $PATH", dirs.bin.as_os_str())
+                format!("set -gx PATH {path:?} $PATH")
             }
             Shell::Powershell => {
                 let current_path =
