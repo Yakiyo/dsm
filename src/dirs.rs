@@ -29,9 +29,9 @@ impl std::convert::From<&str> for DsmDir {
                     installations: root.join("installations"),
                     aliases: root.join("aliases"),
                     bin: root.join("bin"),
-                    root
+                    root,
                 }
-            },
+            }
         }
     }
 }
