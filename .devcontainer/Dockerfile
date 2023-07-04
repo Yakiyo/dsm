@@ -1,9 +1,9 @@
-FROM ubuntu:18.04
+FROM mcr.microsoft.com/devcontainers/universal:2-linux
 
 WORKDIR /home/
 
 COPY . .
 
-RUN bash ./setup.sh
+RUN bash ./script.sh
 
 ENV PATH="/root/.cargo/bin:$PATH"

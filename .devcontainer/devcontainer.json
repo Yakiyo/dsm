@@ -14,5 +14,8 @@
 				"vadimcn.vscode-lldb"
 			]
 		}
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/rust:1": {}
 	}
 }
