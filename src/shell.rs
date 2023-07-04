@@ -1,8 +1,8 @@
-use crate::dirs::DsmDir;
 use crate::error;
 use crate::platform::platform_name;
 use anyhow::Context;
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 #[cfg(windows)]
 pub const AVAILABLE_SHELLS: &[&str; 5] = &["cmd", "powershell", "bash", "zsh", "fish"];
@@ -77,24 +77,20 @@ impl std::fmt::Display for Shell {
 
 impl Shell {
     /// Add current installation dir to path
-    pub fn path(&self, dirs: &DsmDir) -> anyhow::Result<String> {
-        let path = dirs
-            .bin
-            .to_str()
-            .with_context(|| "Failed to read current path")?;
+    pub fn path(&self, bin_dir: &PathBuf) -> anyhow::Result<String> {
         let s = match self {
             Shell::Bash | Shell::Zsh => {
-                format!("export PATH={path:?}:$PATH")
+                format!("export PATH={:?}:$PATH", bin_dir.display())
             }
             Shell::Fish => {
-                format!("set -gx PATH {path:?} $PATH")
+                format!("set -gx PATH {:?} $PATH", bin_dir.display())
             }
             Shell::Powershell => {
                 let current_path =
                     std::env::var_os("PATH").with_context(|| "Failed to read current path")?;
 
                 let mut split_paths: Vec<_> = std::env::split_paths(&current_path).collect();
-                let bin_path = std::path::PathBuf::from(&dirs.bin);
+                let bin_path = std::path::PathBuf::from(bin_dir);
                 split_paths.insert(0, bin_path);
 
                 let new_path = std::env::join_paths(split_paths)
@@ -107,7 +103,7 @@ impl Shell {
                     std::env::var_os("PATH").with_context(|| "Failed to read current path")?;
 
                 let mut split_paths: Vec<_> = std::env::split_paths(&current_path).collect();
-                let bin_path = std::path::PathBuf::from(&dirs.bin);
+                let bin_path = std::path::PathBuf::from(bin_dir);
                 split_paths.insert(0, bin_path);
 
                 let new_path = std::env::join_paths(split_paths)

@@ -1,5 +1,4 @@
 use crate::error;
-use crate::platform::platform_name;
 use anyhow::Context;
 use dart_semver::Version;
 use std::path::PathBuf;
@@ -24,12 +23,15 @@ impl std::convert::From<&str> for DsmDir {
     fn from(value: &str) -> Self {
         match value {
             "default" | "~" | "~/" => DsmDir::default(),
-            _ => DsmDir {
-                root: [value].iter().collect(),
-                installations: [value, "installations"].iter().collect(),
-                aliases: [value, "aliases"].iter().collect(),
-                bin: [value, "bin"].iter().collect(),
-            },
+            _ => {
+                let root = PathBuf::from(value);
+                DsmDir {
+                    installations: root.join("installations"),
+                    aliases: root.join("aliases"),
+                    bin: root.join("bin"),
+                    root,
+                }
+            }
         }
     }
 }
@@ -54,14 +56,11 @@ impl std::str::FromStr for DsmDir {
 
 impl std::default::Default for DsmDir {
     fn default() -> Self {
-        let home = match home_dir() {
-            Ok(t) => t,
-            Err(e) => {
-                error!("{e}");
-            }
-        };
+        let home_dir = home::home_dir().unwrap_or_else(|| {
+            error!("Unable to determine user home directory. Consider manually setting the value");
+        });
 
-        DsmDir::from([home.to_str().unwrap(), ".dsm"].iter().collect::<PathBuf>())
+        DsmDir::from(home_dir.join(".dsm"))
     }
 }
 
@@ -149,20 +148,4 @@ impl DsmDir {
         }
         Ok(vec)
     }
-}
-
-// https://stackoverflow.com/a/25498458/17990034
-/// Get home dir path
-pub fn home_dir() -> anyhow::Result<PathBuf> {
-    use std::env;
-    let var = match platform_name() {
-        "windows" => "UserProfile",
-        "linux" | "macos" => "HOME",
-        _ => return Err(anyhow::anyhow!("Unknown os detected. Cannot determine home dir. Please file an issue at https://github.com/Yakiyo/dsm"))
-    };
-
-    let home_path = env::var(var).with_context(|| {
-        "Cannot read home directory. Consider manually setting the value of `DSM_DIR`"
-    })?;
-    Ok(PathBuf::from(home_path))
 }
