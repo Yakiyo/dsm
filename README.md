@@ -3,6 +3,8 @@
 
 Simplified version manager for the Dart SDK. Inspired by [fnm](https://github.com/Schniz/fnm) and [nvm](https://github.com/nvm-sh/nvm). 
 
+![dsm-svg](./tools/dsm.svg)
+
 ## Installation
 To quickly install dsm, you can use one of the following scripts
 
