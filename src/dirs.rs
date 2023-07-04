@@ -23,11 +23,14 @@ impl std::convert::From<&str> for DsmDir {
     fn from(value: &str) -> Self {
         match value {
             "default" | "~" | "~/" => DsmDir::default(),
-            _ => DsmDir {
-                root: [value].iter().collect(),
-                installations: [value, "installations"].iter().collect(),
-                aliases: [value, "aliases"].iter().collect(),
-                bin: [value, "bin"].iter().collect(),
+            _ => {
+                let root = PathBuf::from(value);
+                DsmDir {
+                    installations: root.join("installations"),
+                    aliases: root.join("aliases"),
+                    bin: root.join("bin"),
+                    root
+                }
             },
         }
     }
