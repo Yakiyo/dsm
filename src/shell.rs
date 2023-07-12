@@ -120,7 +120,7 @@ impl Shell {
         match self {
             Shell::Bash | Shell::Zsh => {
                 for (name, value) in vars {
-                    println!("export {name}={value}");
+                    println!("export {name}={value:?}");
                 }
             }
             Shell::Fish => {
