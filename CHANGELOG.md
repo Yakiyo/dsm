@@ -1,5 +1,13 @@
 # dsm
 
+## 1.0.1
+
+### Patch Changes
+
+- e206502: fix issues with paths not showing correctly on bash like terminal on windows (?)
+- a4b43b7: Remove default alias
+- a4b43b7: Support aliases and latest format in uninstall
+
 ## 1.0.0
 
 ### Major Changes
