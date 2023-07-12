@@ -22,6 +22,7 @@ pub trait Command: Sized {
             eprintln!("{} {:#?}", Paint::red("[ERROR]"), err);
         }
         eprintln!("{} {:?}", Paint::red("[ERROR]"), err);
+        std::process::exit(1);
     }
 
     fn handle(self, config: DsmConfig) {
