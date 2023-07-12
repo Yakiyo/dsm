@@ -35,14 +35,15 @@ impl super::Command for Install {
             "Successfully installed Dart SDK {}",
             Paint::green(format!("{}", &self.version))
         );
-        let default_alias = &config.base_dir.aliases.join("default");
-        if !default_alias.exists() {
-            debug!(
-                "Missing default alias. Assigning {} as default",
-                &self.version
-            );
-            crate::alias::create_alias(dir, &version, "default")?;
-        }
+        // let default_alias = &config.base_dir.aliases.join("default");
+        // if !default_alias.exists() {
+        //     debug!(
+        //         "Missing default alias. Assigning {} as default",
+        //         &self.version
+        //     );
+        //     crate::alias::create_alias(dir, &version, "default")?;
+        // }
+
         // If input was a latest-* patter, then create an associated alias to that
         // version with that name
         if let UserVersion::Latest(c) = self.version {
