@@ -1,19 +1,23 @@
 use crate::alias;
 use crate::cli::DsmConfig;
+use crate::user_version::UserVersion;
 use anyhow::Context;
-use dart_semver::Version;
 use yansi::Paint;
 
 #[derive(clap::Args, Debug, Default)]
 pub struct Uninstall {
     /// The version to uninstall
-    version: Version,
+    version: UserVersion,
 }
 
 impl super::Command for Uninstall {
     fn run(self, config: DsmConfig) -> anyhow::Result<()> {
         let dir = &config.base_dir;
-        let p = dir.find_version_dir(&self.version);
+        let version = self
+            .version
+            .to_version(Some(dir))
+            .with_context(|| "Unable to resolve version")?;
+        let p = dir.find_version_dir(&version);
         if !p.exists() {
             return Err(anyhow::anyhow!(
                 "Version {} is not installed. Use the `ls` command to view all installed versions",
