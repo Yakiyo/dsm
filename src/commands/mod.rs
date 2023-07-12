@@ -18,9 +18,9 @@ pub trait Command: Sized {
     fn catch(err: anyhow::Error) {
         // Print in more details during dev builds
         #[cfg(debug_assertions)]
-        {
-            eprintln!("{} {:#?}", Paint::red("[ERROR]"), err);
-        }
+        eprintln!("{} {:#?}", Paint::red("[ERROR]"), err);
+
+        #[cfg(not(debug_assertions))]
         eprintln!("{} {:?}", Paint::red("[ERROR]"), err);
         std::process::exit(1);
     }
