@@ -1,5 +1,6 @@
 use crate::http::fetch;
 use anyhow::Context;
+use yansi::Paint;
 
 /// Current app version
 const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -16,9 +17,19 @@ impl super::Command for SelfSub {
             return Ok(());
         }
         println!(
-            "New version v{latest} available. Visit {} for getting it.",
-            yansi::Paint::new("https://github.com/Yakiyo/dsm").underline()
+            "New version {} available at https://github.com/Yakiyo/dsm/releases",
+            Paint::blue("v".to_owned() + latest)
         );
+        #[cfg(windows)]
+        {
+            println!("To install the latest version, open up Powershell and run the following:\n");
+            println!("    irm https://dsm-vm.vercel.app/install.ps1 | iex\n");
+        }
+        #[cfg(unix)]
+        {
+            println!("To install the latest version, run the following command:\n");
+            println!("    curl -fsSL https://dsm-vm.vercel.app/install.sh | bash\n");
+        }
         Ok(())
     }
 }
