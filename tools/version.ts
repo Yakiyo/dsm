@@ -2,7 +2,7 @@
 
 import toml from "toml";
 import cp from "child_process";
-import { strict as assert} from "assert";
+import { strict as assert } from "assert";
 import { readFile, writeFile } from "fs/promises";
 
 const CARGO_TOML = new URL("../Cargo.toml", import.meta.url).pathname;

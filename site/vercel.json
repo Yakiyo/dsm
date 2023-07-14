@@ -1,13 +1,13 @@
 {
-  "$schema":"https://openapi.vercel.sh/vercel.json",
-  "github":{
-    "silent":true
-  },
-  "redirects":[
-    { "source":"/", "destination":"https://github.com/Yakiyo/dsm" }
-  ],
-  "rewrites": [
-    { "source": "/install.sh", "destination": "/install.sh.txt" },
-    { "source": "/install.ps1", "destination": "/install.ps1.txt" }
-  ]
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"github": {
+		"silent": true
+	},
+	"redirects": [
+		{ "source": "/", "destination": "https://github.com/Yakiyo/dsm" }
+	],
+	"rewrites": [
+		{ "source": "/install.sh", "destination": "/install.sh.txt" },
+		{ "source": "/install.ps1", "destination": "/install.ps1.txt" }
+	]
 }
