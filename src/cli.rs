@@ -45,7 +45,7 @@ pub struct DsmConfig {
     /// Disable colors in output
     #[clap(
         long = "no-colors",
-        env = "DSM_COLORS",
+        env = "DSM_NO_COLORS",
         global = true,
         hide_env_values = true
     )]
