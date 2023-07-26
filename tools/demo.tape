@@ -1,5 +1,4 @@
 # Generating a gif file using [vhs](https://github.com/charmbracelet/vhs)
-# ./github/workflows/vhs.yml is used to keeping it up to date
 
 Output tools/dsm.gif
 
