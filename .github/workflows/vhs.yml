@@ -35,7 +35,7 @@ jobs:
       - name: Add to path
         run: export PATH="target/release/":$PATH
 
-      - uses: charmbracelet/vhs-action@v1
+      - uses: charmbracelet/vhs-action@v2
 
       - name: Run vhs
         shell: bash
