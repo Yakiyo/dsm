@@ -36,8 +36,14 @@ jobs:
         run: export PATH="target/release/":$PATH
 
       - uses: charmbracelet/vhs-action@v1
-        with:
-          path: 'tools/demo.tape'
+
+      - name: Run vhs
+        shell: bash
+        run: |
+          export PATH="target/release/":$PATH
+          eval "$(dsm env bash)"
+          vhs tools/demo.tape
+
       - uses: stefanzweifel/git-auto-commit-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
