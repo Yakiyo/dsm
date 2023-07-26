@@ -6,10 +6,12 @@ on:
       - .github/workflows/vhs.yml
 jobs:
   vhs:
+    defaults:
+      run:
+        shell: bash
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      # Build and add dsm to path first
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -24,11 +26,14 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        
+      
+      - name: Build dsm
+        run: cargo build --release
+
+      - run: ls -A && ls -A target && ls -A target/release
+      
       - name: Add to path
-        run: |
-          cargo build --release
-          export PATH="target/release/":$PATH
+        run: export PATH="target/release/":$PATH
 
       - uses: charmbracelet/vhs-action@v1
         with:
