@@ -3,11 +3,33 @@ on:
   push:
     paths:
       - tools/demo.tape
+      - .github/workflows/vhs.yml
 jobs:
   vhs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      # Build and add dsm to path first
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        
+      - name: Add to path
+        run: |
+          cargo build --release
+          export PATH="target/release/":$PATH
+
       - uses: charmbracelet/vhs-action@v1
         with:
           path: 'tools/demo.tape'
