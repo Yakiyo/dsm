@@ -33,7 +33,7 @@ impl super::Command for Install {
         install_dart_sdk(&version, &config)?;
         println!(
             "Successfully installed Dart SDK {}",
-            Paint::green(format!("{}", &self.version))
+            Paint::green(format!("v{}", version))
         );
         // let default_alias = &config.base_dir.aliases.join("default");
         // if !default_alias.exists() {
