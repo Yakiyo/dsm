@@ -9,6 +9,6 @@
 	"rewrites": [
 		{ "source": "/install.sh", "destination": "/install.sh.txt" },
 		{ "source": "/install.ps1", "destination": "/install.ps1.txt" },
-		{ "source": "/scoop.json", "destination": "/scoop.json" }
+		{ "source": "/scoop.json", "destination": "/scoop.json.txt" }
 	]
 }
