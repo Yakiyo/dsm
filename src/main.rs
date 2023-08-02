@@ -9,6 +9,7 @@ mod alias;
 mod arch;
 mod cli;
 mod commands;
+mod config;
 mod dirs;
 mod fs;
 mod http;
