@@ -1,6 +1,6 @@
 use crate::arch::{platform_arch, Arch, SUPPORTED_ARCHS};
-use crate::dirs::DsmDir;
 use clap::Parser;
+use std::path;
 
 #[derive(Parser, Debug)]
 pub struct Config {
@@ -22,11 +22,9 @@ pub struct Config {
         env = "DSM_DIR",
         global = true,
         value_name = "DSM_DIR",
-        default_value = "~",
-        hide_default_value = true,
         hide_env_values = true
     )]
-    pub base_dir: DsmDir,
+    base_dir: Option<path::PathBuf>,
 
     /// Disable colors in output
     #[clap(
@@ -36,4 +34,20 @@ pub struct Config {
         hide_env_values = true
     )]
     pub disable_colors: bool,
+}
+
+impl Config {
+    pub fn root_with_default(&self) -> path::PathBuf {
+        match self.base_dir {
+            Some(p) => p.to_path_buf(),
+            None => {
+                let h = home::home_dir();
+                if h.is_none() {
+                    log::error!("Unable to get user home dir. Consider manually setting value of `DSM_DIR` to passing value to `--dsm-dir` flag.");
+                    std::process::exit(1);
+                }
+                h.unwrap().join(".dsm")
+            }
+        }
+    }
 }
