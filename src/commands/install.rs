@@ -1,6 +1,5 @@
 use crate::arch::Arch;
 use crate::cli::DsmConfig;
-use crate::debug;
 use crate::http::fetch_bytes;
 use crate::platform::platform_name;
 use crate::user_version::UserVersion;
@@ -68,7 +67,7 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
         .with_context(|| "Failed to copy extracted files to installation dir.")?;
 
     if let Err(e) = tmp_dir.close() {
-        debug!("Could not close temp dir. Please remove it manually\n{e}");
+        log::warn!("Could not close temp dir. Please remove it manually\n{e}");
     }
     Ok(())
 }

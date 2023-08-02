@@ -1,4 +1,3 @@
-use crate::error;
 use anyhow::Context;
 use dart_semver::Version;
 use std::path::PathBuf;
@@ -40,7 +39,8 @@ impl std::convert::From<PathBuf> for DsmDir {
     fn from(value: PathBuf) -> Self {
         let value = value.to_str();
         if value.is_none() {
-            error!("Could not resolve path value to string");
+            log::error!("Could not resolve path value to string");
+            std::process::exit(1);
         }
         DsmDir::from(value.unwrap())
     }
@@ -57,7 +57,10 @@ impl std::str::FromStr for DsmDir {
 impl std::default::Default for DsmDir {
     fn default() -> Self {
         let home_dir = home::home_dir().unwrap_or_else(|| {
-            error!("Unable to determine user home directory. Consider manually setting the value");
+            log::error!(
+                "Unable to determine user home directory. Consider manually setting the value"
+            );
+            std::process::exit(1);
         });
 
         DsmDir::from(home_dir.join(".dsm"))
