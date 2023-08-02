@@ -52,6 +52,7 @@ eval $(dsm env bash)
 # or for zsh
 eval $(dsm env zsh)
 ```
+Windows users using Git Bash should check out this issue: https://github.com/Yakiyo/dsm/issues/20
 
 ### Fish
 Create `~/.config/fish/conf.d/dsm.fish` and add the following.
