@@ -49,7 +49,6 @@ fn init(disable_color_flag: bool) {
 
     // if either disable color flag is set or DSM_LOG_STYLE is set to never, disable colors
     if disable_color_flag || disable_color {
-        log::debug!("Disabling colors in output due to terminal not supporting ascii sequences");
         yansi::Paint::disable();
     }
 
