@@ -1,5 +1,5 @@
 use crate::alias;
-use crate::cli::DsmConfig;
+use crate::config::Config;
 use crate::user_version::UserVersion;
 use anyhow::Context;
 use yansi::Paint;
@@ -11,7 +11,7 @@ pub struct Uninstall {
 }
 
 impl super::Command for Uninstall {
-    fn run(self, config: DsmConfig) -> anyhow::Result<()> {
+    fn run(self, config: Config) -> anyhow::Result<()> {
         match self.version {
             UserVersion::Latest(_) => anyhow::bail!("Invalid version string. latest-channel is not valid for uninstallation. Provide an alias or full semver."),
             _ => {}

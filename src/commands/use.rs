@@ -1,4 +1,4 @@
-use crate::cli::DsmConfig;
+use crate::config::Config;
 use crate::dirs::DsmDir;
 use crate::fs;
 use crate::user_version::UserVersion;
@@ -17,7 +17,7 @@ pub struct Use {
 }
 
 impl super::Command for Use {
-    fn run(self, config: DsmConfig) -> anyhow::Result<()> {
+    fn run(self, config: Config) -> anyhow::Result<()> {
         let dirs = &config.base_dir;
         let version = self.version.to_version(Some(dirs))?;
         let version_path = dirs.find_version_dir(&version);

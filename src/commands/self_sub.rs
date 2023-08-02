@@ -9,7 +9,7 @@ const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub struct SelfSub;
 
 impl super::Command for SelfSub {
-    fn run(self, _: crate::cli::DsmConfig) -> anyhow::Result<()> {
+    fn run(self, _: crate::config::Config) -> anyhow::Result<()> {
         let latest = fetch_gh_tag()?.to_lowercase();
         let latest = latest.trim_start_matches('v');
         if latest == PKG_VERSION {

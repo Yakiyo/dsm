@@ -1,12 +1,12 @@
 use crate::alias;
-use crate::cli::DsmConfig;
+use crate::config::Config;
 use yansi::Paint;
 
 #[derive(clap::Args, Debug, Default)]
 pub struct List;
 
 impl super::Command for List {
-    fn run(self, config: DsmConfig) -> anyhow::Result<()> {
+    fn run(self, config: Config) -> anyhow::Result<()> {
         let versions = config.base_dir.list_versions()?;
         if versions.is_empty() {
             println!("{}", Paint::yellow("No versions installed"));

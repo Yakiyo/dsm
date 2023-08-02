@@ -1,5 +1,5 @@
 use crate::arch::Arch;
-use crate::cli::DsmConfig;
+use crate::config::Config;
 use crate::http::fetch_bytes;
 use crate::platform::platform_name;
 use crate::user_version::UserVersion;
@@ -19,7 +19,7 @@ pub struct Install {
 }
 
 impl super::Command for Install {
-    fn run(self, config: DsmConfig) -> anyhow::Result<()> {
+    fn run(self, config: Config) -> anyhow::Result<()> {
         let version = match self.version {
             UserVersion::Version(v) => v,
             UserVersion::Alias(_) => {
@@ -43,7 +43,7 @@ impl super::Command for Install {
 }
 
 /// Install dart sdk
-fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()> {
+fn install_dart_sdk(version: &Version, config: &Config) -> anyhow::Result<()> {
     let p = config.base_dir.find_version_dir(version);
     if p.exists() {
         return Err(anyhow::anyhow!("Version {version} is already installed. For reinstalling, please uninstall first then install again."));

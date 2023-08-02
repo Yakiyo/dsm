@@ -15,7 +15,7 @@ pub struct Env {
 }
 
 impl super::Command for Env {
-    fn run(self, config: crate::cli::DsmConfig) -> anyhow::Result<()> {
+    fn run(self, config: crate::config::Config) -> anyhow::Result<()> {
         let env_vars = HashMap::from([
             ("DSM_ARCH", config.arch.to_string()),
             ("DSM_DIR", format!("{}", config.base_dir.root.display())),

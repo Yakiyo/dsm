@@ -1,7 +1,7 @@
 use anyhow::Context;
 use yansi::Paint;
 
-use crate::cli::DsmConfig;
+use crate::config::Config;
 
 #[derive(clap::Args, Debug, Default)]
 pub struct Unalias {
@@ -9,7 +9,7 @@ pub struct Unalias {
 }
 
 impl super::Command for Unalias {
-    fn run(self, config: DsmConfig) -> anyhow::Result<()> {
+    fn run(self, config: Config) -> anyhow::Result<()> {
         let alias_dir = &config.base_dir.aliases.join(&self.alias);
         if !alias_dir.exists() {
             return Err(anyhow::anyhow!(

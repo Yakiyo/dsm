@@ -1,4 +1,4 @@
-use crate::cli::DsmConfig;
+use crate::config::Config;
 use yansi::Paint;
 
 pub mod alias;
@@ -13,7 +13,7 @@ pub mod uninstall;
 pub mod r#use;
 
 pub trait Command: Sized {
-    fn run(self, config: DsmConfig) -> anyhow::Result<()>;
+    fn run(self, config: Config) -> anyhow::Result<()>;
 
     fn catch(err: anyhow::Error) {
         // Print in more details during dev builds
@@ -25,7 +25,7 @@ pub trait Command: Sized {
         std::process::exit(1);
     }
 
-    fn handle(self, config: DsmConfig) {
+    fn handle(self, config: Config) {
         if let Err(e) = self.run(config) {
             Self::catch(e)
         }
