@@ -46,7 +46,7 @@ fn replace_symlink(dirs: &DsmDir, version: &Version) -> anyhow::Result<()> {
     let from = dirs.installations.join(version.to_str()).join("bin");
     let to = &dirs.bin;
     if to.exists() {
-        crate::debug!("Removing previous link");
+        log::debug!("Removing previous link");
         std::fs::remove_dir_all(to).with_context(|| "Failed to remove previous link")?;
     }
     fs::symlink_dir(from, to).with_context(|| "Failed to hard link executable.")?;

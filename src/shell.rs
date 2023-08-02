@@ -1,4 +1,3 @@
-use crate::error;
 use crate::platform::platform_name;
 use anyhow::Context;
 use std::collections::HashMap;
@@ -26,7 +25,8 @@ impl Default for Shell {
             "linux" | "darwin" => Self::Bash,
             "windows" => Self::Powershell,
             platform => {
-                error!("Unknown platform {platform} received");
+                log::error!("Unknown platform {platform} received");
+                std::process::exit(1);
             }
         }
     }
