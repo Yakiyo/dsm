@@ -1,5 +1,5 @@
 use crate::arch::Arch;
-use crate::config::Config;
+use crate::config::{Config, EnsurePath};
 use crate::http::fetch_bytes;
 use crate::platform::platform_name;
 use crate::user_version::UserVersion;
@@ -27,9 +27,11 @@ impl super::Command for Install {
             }
             UserVersion::Latest(c) => UserVersion::resolve_latest(&c)?,
         };
-        let dir = &config.base_dir;
+        let dir = &config.root_with_default();
 
-        dir.ensure_dirs()
+        config
+            .installation_dir()
+            .ensure_path()
             .with_context(|| "Failed to setup dsm dirs")?;
 
         install_dart_sdk(&version, &config)?;
@@ -44,7 +46,7 @@ impl super::Command for Install {
 
 /// Install dart sdk
 fn install_dart_sdk(version: &Version, config: &Config) -> anyhow::Result<()> {
-    let p = config.base_dir.find_version_dir(version);
+    let p = config.installation_dir().join(version.to_str());
     if p.exists() {
         return Err(anyhow::anyhow!("Version {version} is already installed. For reinstalling, please uninstall first then install again."));
     }
@@ -55,7 +57,7 @@ fn install_dart_sdk(version: &Version, config: &Config) -> anyhow::Result<()> {
         .with_context(|| "No Dart SDK available with provided arch type or version.")?;
 
     let mut tmp = tempfile::tempfile().with_context(|| "Failed to create temporary file")?;
-    let tmp_dir = tempfile::tempdir_in(&config.base_dir.installations)
+    let tmp_dir = tempfile::tempdir_in(&config.installation_dir())
         .with_context(|| "Could not create tmp dir")?;
 
     tmp.write_all(&archive)
