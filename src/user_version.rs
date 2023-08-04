@@ -1,8 +1,8 @@
 use crate::alias::Alias;
-use crate::dirs::DsmDir;
 use crate::http;
 use anyhow::Context;
 use dart_semver::{Channel, Version as DartVersion};
+use std::path;
 
 /// Represents a user version
 #[derive(Debug, PartialEq)]
@@ -43,11 +43,11 @@ impl UserVersion {
     }
 
     /// Convert an alias to a version
-    pub fn to_version(&self, dirs: Option<&DsmDir>) -> anyhow::Result<DartVersion> {
+    pub fn to_version(&self, dirs: Option<path::PathBuf>) -> anyhow::Result<DartVersion> {
         match self {
             UserVersion::Version(a) => Ok(*a),
             UserVersion::Alias(a) => {
-                let alias: Alias = dirs.unwrap().find_alias_dir(a).as_path().try_into()?;
+                let alias: Alias = dirs.unwrap().join(a).as_path().try_into()?;
                 Ok(alias.version)
             }
             UserVersion::Latest(c) => UserVersion::resolve_latest(c),
@@ -94,6 +94,22 @@ pub fn fetch_latest_version(channel: &Channel) -> anyhow::Result<String> {
     Ok(String::from(json["version"].as_str().with_context(
         || "Received non string value for version.",
     )?))
+}
+
+pub fn list_versions<P: AsRef<path::Path>>(dir: P) -> anyhow::Result<Vec<DartVersion>> {
+    let dir = dir.as_ref();
+    if !dir.exists() {
+        return Ok(vec![]);
+    }
+    let vec: Vec<DartVersion> = dir
+        .read_dir()?
+        .filter_map(Result::ok)
+        .filter(|f| !f.file_name().to_str().map_or(false, |f| f.starts_with('.')))
+        .filter_map(|f| f.file_name().to_str().map(str::to_string))
+        .map(DartVersion::parse)
+        .filter_map(Result::ok)
+        .collect();
+    Ok(vec)
 }
 
 #[cfg(test)]

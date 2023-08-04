@@ -27,7 +27,6 @@ impl super::Command for Install {
             }
             UserVersion::Latest(c) => UserVersion::resolve_latest(&c)?,
         };
-        let dir = &config.root_with_default();
 
         config
             .installation_dir()

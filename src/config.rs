@@ -42,7 +42,7 @@ pub struct Config {
 impl Config {
     /// Get root dir, if provided, else use default
     pub fn root_with_default(&self) -> path::PathBuf {
-        match self.base_dir {
+        match &self.base_dir {
             Some(p) => p.to_path_buf(),
             None => {
                 let h = home::home_dir();
@@ -105,7 +105,7 @@ pub trait EnsurePath {
 
 impl EnsurePath for path::PathBuf {
     fn ensure_path(&self) -> anyhow::Result<()> {
-        if !self.exists() && self.is_dir() {
+        if !self.exists() {
             fs::create_dir_all(self)
                 .with_context(|| format!("Unable to create dir in path {}", self.display()))?;
         }
