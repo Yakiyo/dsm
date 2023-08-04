@@ -56,7 +56,7 @@ fn install_dart_sdk(version: &Version, config: &Config) -> anyhow::Result<()> {
         .with_context(|| "No Dart SDK available with provided arch type or version.")?;
 
     let mut tmp = tempfile::tempfile().with_context(|| "Failed to create temporary file")?;
-    let tmp_dir = tempfile::tempdir_in(&config.installation_dir())
+    let tmp_dir = tempfile::tempdir_in(config.installation_dir())
         .with_context(|| "Could not create tmp dir")?;
 
     tmp.write_all(&archive)
@@ -76,7 +76,7 @@ fn install_dart_sdk(version: &Version, config: &Config) -> anyhow::Result<()> {
 fn extract(zipfile: &File, dest: &Path) -> anyhow::Result<()> {
     let mut zip = ZipArchive::new(zipfile).unwrap();
     if !dest.exists() {
-        std::fs::create_dir_all(&dest)
+        std::fs::create_dir_all(dest)
             .with_context(|| "Unable to create temp dir for extracting files")?;
     }
     let pb = ProgressBar::new(zip.len().try_into().unwrap());
@@ -93,7 +93,7 @@ fn extract(zipfile: &File, dest: &Path) -> anyhow::Result<()> {
             Some(p) => dest.join(p),
             None => continue,
         };
-        if file.name().ends_with("/") {
+        if file.name().ends_with('/') {
             std::fs::create_dir_all(path).unwrap();
             continue;
         }

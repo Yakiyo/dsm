@@ -40,10 +40,7 @@ fn init(disable_color_flag: bool) {
 
     // if DSM_LOG_STYLE is set to "never", disable colors
     let disable_color: bool = match env::var("DSM_LOG_STYLE") {
-        Ok(v) => match v.to_lowercase().as_str() {
-            "never" => true,
-            _ => false,
-        },
+        Ok(v) => matches!(v.to_lowercase().as_str(), "never"),
         Err(_) => false,
     };
 

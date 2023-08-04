@@ -12,10 +12,10 @@ pub struct Uninstall {
 
 impl super::Command for Uninstall {
     fn run(self, config: Config) -> anyhow::Result<()> {
-        match self.version {
-            UserVersion::Latest(_) => anyhow::bail!("Invalid version string. latest-channel is not valid for uninstallation. Provide an alias or full semver."),
-            _ => {}
+        if let UserVersion::Latest(_) = self.version {
+            anyhow::bail!("Invalid version string. latest-channel is not valid for uninstallation. Provide an alias or full semver.");
         }
+
         let version = self
             .version
             .to_version(Some(config.aliases_dir()))
