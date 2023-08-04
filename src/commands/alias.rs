@@ -1,5 +1,5 @@
 use crate::alias;
-use crate::cli::DsmConfig;
+use crate::config::Config;
 use dart_semver::Version;
 use yansi::Paint;
 
@@ -10,12 +10,17 @@ pub struct Alias {
 }
 
 impl super::Command for Alias {
-    fn run(self, config: DsmConfig) -> anyhow::Result<()> {
-        let alias_dir = &config.base_dir.aliases.join(&self.name);
+    fn run(self, config: Config) -> anyhow::Result<()> {
+        let alias_dir = &config.aliases_dir().join(&self.name);
         if alias_dir.exists() {
             log::warn!("Alias with that name already exists. Overwriting it.");
         }
-        alias::create_alias(&config.base_dir, &self.version, &self.name)?;
+        alias::create_alias(
+            config.aliases_dir(),
+            config.installation_dir(),
+            &self.version,
+            &self.name,
+        )?;
         println!(
             "Created alias for {} with name {}",
             Paint::blue(format!("v{}", self.version)),

@@ -1,19 +1,20 @@
 use crate::alias;
-use crate::cli::DsmConfig;
+use crate::config::Config;
+use crate::user_version::list_versions;
 use yansi::Paint;
 
 #[derive(clap::Args, Debug, Default)]
 pub struct List;
 
 impl super::Command for List {
-    fn run(self, config: DsmConfig) -> anyhow::Result<()> {
-        let versions = config.base_dir.list_versions()?;
+    fn run(self, config: Config) -> anyhow::Result<()> {
+        let versions = list_versions(config.installation_dir())?;
         if versions.is_empty() {
             println!("{}", Paint::yellow("No versions installed"));
             return Ok(());
         }
-        let current = config.base_dir.current_version().unwrap_or(None);
-        let alias_hash = alias::create_alias_hash(&config.base_dir.aliases)?;
+        let current = config.current_version().unwrap_or(None);
+        let alias_hash = alias::create_alias_hash(&config.aliases_dir())?;
         for version in versions {
             let aliases = match alias_hash.get(&version.to_str()) {
                 None => String::new(),

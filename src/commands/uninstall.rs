@@ -1,5 +1,5 @@
 use crate::alias;
-use crate::cli::DsmConfig;
+use crate::config::Config;
 use crate::user_version::UserVersion;
 use anyhow::Context;
 use yansi::Paint;
@@ -11,17 +11,16 @@ pub struct Uninstall {
 }
 
 impl super::Command for Uninstall {
-    fn run(self, config: DsmConfig) -> anyhow::Result<()> {
-        match self.version {
-            UserVersion::Latest(_) => anyhow::bail!("Invalid version string. latest-channel is not valid for uninstallation. Provide an alias or full semver."),
-            _ => {}
+    fn run(self, config: Config) -> anyhow::Result<()> {
+        if let UserVersion::Latest(_) = self.version {
+            anyhow::bail!("Invalid version string. latest-channel is not valid for uninstallation. Provide an alias or full semver.");
         }
-        let dir = &config.base_dir;
+
         let version = self
             .version
-            .to_version(Some(dir))
+            .to_version(Some(config.aliases_dir()))
             .with_context(|| "Unable to resolve version")?;
-        let p = dir.find_version_dir(&version);
+        let p = config.installation_dir().join(version.to_string());
         if !p.exists() {
             return Err(anyhow::anyhow!(
                 "Version {} is not installed. Use the `ls` command to view all installed versions",
@@ -37,13 +36,13 @@ impl super::Command for Uninstall {
         })?;
 
         // Clean up aliases
-        let aliases = alias::create_alias_hash(&dir.aliases)
+        let aliases = alias::create_alias_hash(config.aliases_dir())
             .with_context(|| "Failed to fetch aliases")?
             .remove(&self.version.to_string())
             .unwrap_or(Vec::new());
 
         for alias in aliases {
-            let alias_dir = dir.find_alias_dir(alias);
+            let alias_dir = config.aliases_dir().join(alias);
             if !alias_dir.exists() {
                 continue;
             }

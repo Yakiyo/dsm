@@ -15,11 +15,14 @@ pub struct Env {
 }
 
 impl super::Command for Env {
-    fn run(self, config: crate::cli::DsmConfig) -> anyhow::Result<()> {
+    fn run(self, config: crate::config::Config) -> anyhow::Result<()> {
         let env_vars = HashMap::from([
             ("DSM_ARCH", config.arch.to_string()),
-            ("DSM_DIR", format!("{}", config.base_dir.root.display())),
             ("DSM_NO_COLORS", config.disable_colors.to_string()),
+            (
+                "DSM_DIR",
+                format!("{}", config.root_with_default().display()),
+            ),
         ]);
 
         if self.json {
@@ -28,7 +31,7 @@ impl super::Command for Env {
         }
 
         let shell = self.shell.with_context(|| "Missing argument for <SHELL>")?;
-        println!("{}", shell.path(&config.base_dir.bin)?);
+        println!("{}", shell.path(&config.bin_dir())?);
         let out = shell.env_vars(&env_vars);
         println!("{}", fix_path(out.as_str()));
         Ok(())
