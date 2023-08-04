@@ -1,6 +1,7 @@
 use crate::arch::{platform_arch, Arch, SUPPORTED_ARCHS};
 use anyhow::Context;
 use clap::Parser;
+use dart_semver::Version;
 use std::{fs, path};
 
 // TODO: separate flag for setting bin dir
@@ -73,6 +74,27 @@ impl Config {
         let mut p = self.root_with_default();
         p.push("bin");
         p
+    }
+
+    /// Find current version in use
+    pub fn current_version(&self) -> anyhow::Result<Option<Version>> {
+        let bin = self.bin_dir();
+        if !(bin.exists() && bin.is_symlink()) {
+            return Ok(None);
+        }
+
+        let original = std::fs::read_link(bin).with_context(|| "Failed to read symlink")?;
+
+        let dir_name = original
+            .parent()
+            .with_context(|| "Installed version seems to be at root. Something seems wrong.")?
+            .file_name()
+            .with_context(|| "Unexpected error while trying to read dir name.")?
+            .to_str()
+            .with_context(|| "Unexpected error. Directory name isnt valid utf-8")?;
+
+        let version = Version::parse(dir_name).with_context(|| "Invalid version.")?;
+        Ok(Some(version))
     }
 }
 
