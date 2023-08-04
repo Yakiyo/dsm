@@ -1,7 +1,9 @@
 use crate::arch::{platform_arch, Arch, SUPPORTED_ARCHS};
+use anyhow::Context;
 use clap::Parser;
-use std::path;
+use std::{fs, path};
 
+// TODO: separate flag for setting bin dir
 #[derive(Parser, Debug)]
 pub struct Config {
     /// The architecture to use. Defaults to the system arch.
@@ -37,6 +39,7 @@ pub struct Config {
 }
 
 impl Config {
+    /// Get root dir, if provided, else use default
     pub fn root_with_default(&self) -> path::PathBuf {
         match self.base_dir {
             Some(p) => p.to_path_buf(),
@@ -49,5 +52,47 @@ impl Config {
                 h.unwrap().join(".dsm")
             }
         }
+    }
+
+    /// aliases dir
+    pub fn aliases_dir(&self) -> path::PathBuf {
+        let mut p = self.root_with_default();
+        p.push("aliases");
+        p
+    }
+
+    /// installations dir
+    pub fn installation_dir(&self) -> path::PathBuf {
+        let mut p = self.root_with_default();
+        p.push("installations");
+        p
+    }
+
+    /// bin dir
+    pub fn bin_dir(&self) -> path::PathBuf {
+        let mut p = self.root_with_default();
+        p.push("bin");
+        p
+    }
+}
+
+/// utility trait implemented on pathbufs and paths
+pub trait EnsurePath {
+    fn ensure_path(&self) -> anyhow::Result<()>;
+}
+
+impl EnsurePath for path::PathBuf {
+    fn ensure_path(&self) -> anyhow::Result<()> {
+        if !self.exists() && self.is_dir() {
+            fs::create_dir_all(self)
+                .with_context(|| format!("Unable to create dir in path {}", self.display()))?;
+        }
+        Ok(())
+    }
+}
+
+impl EnsurePath for path::Path {
+    fn ensure_path(&self) -> anyhow::Result<()> {
+        path::PathBuf::from(self).ensure_path()
     }
 }
