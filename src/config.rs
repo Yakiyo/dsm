@@ -36,7 +36,7 @@ pub struct Config {
         value_name = "DSM_BIN",
         hide_env_values = true
     )]
-    bin_dir: Option<path::PathBuf>,
+    bin: Option<path::PathBuf>,
 
     /// Disable colors in output
     #[clap(
