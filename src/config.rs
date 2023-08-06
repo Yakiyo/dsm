@@ -4,7 +4,6 @@ use clap::Parser;
 use dart_semver::Version;
 use std::{fs, path};
 
-// TODO: separate flag for setting bin dir
 #[derive(Parser, Debug)]
 pub struct Config {
     /// The architecture to use. Defaults to the system arch.
@@ -28,6 +27,16 @@ pub struct Config {
         hide_env_values = true
     )]
     base_dir: Option<path::PathBuf>,
+
+    /// Bin directory. This is where the current used dart sdk will be symlinked. Defaults to `~/.dsm/bin`
+    #[clap(
+        long = "bin-dir",
+        env = "DSM_BIN",
+        global = true,
+        value_name = "DSM_BIN",
+        hide_env_values = true
+    )]
+    bin_dir: Option<path::PathBuf>,
 
     /// Disable colors in output
     #[clap(
