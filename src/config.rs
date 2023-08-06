@@ -80,9 +80,13 @@ impl Config {
 
     /// bin dir
     pub fn bin_dir(&self) -> path::PathBuf {
-        let mut p = self.root_with_default();
-        p.push("bin");
-        p
+        if let Some(p) = &self.bin {
+            p.to_path_buf()
+        } else {
+            let mut p = self.root_with_default();
+            p.push("bin");
+            p
+        }
     }
 
     /// Find current version in use
