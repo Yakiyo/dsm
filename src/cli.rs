@@ -32,6 +32,10 @@ pub enum SubCommand {
     #[clap(name = "list", visible_aliases = &["ls"])]
     List(commands::list::List),
 
+    /// List all available versions
+    #[clap(name = "list-remote", visible_aliases = &["ls-remote"])]
+    ListRemote(commands::list_remote::ListRemote),
+
     /// Print required environment variables for dsm
     #[clap(name = "env")]
     Env(commands::env::Env),
@@ -70,6 +74,7 @@ impl Cli {
             SubCommand::Unlias(e) => e.handle(self.config),
             SubCommand::SelfSub(e) => e.handle(self.config),
             SubCommand::Completions(e) => e.handle(self.config),
+            SubCommand::ListRemote(e) => e.handle(self.config),
         }
     }
 }
