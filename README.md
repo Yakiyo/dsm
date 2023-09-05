@@ -113,7 +113,7 @@ Dsm logs additional information throughout the program. The level of the emitted
 
 The default is error. If `info` is set, then all logs of level info, warn and error will be emitted. Similar for the others too. See the docs at [`env_logger`](https://docs.rs/env_logger/0.10.0/env_logger/#enabling-logging) for additional details
 
-Colors can be disabled either via the `--disable-colors` flag or by setting `SCOOB_LOG_STYLE` env to "never".
+Colors can be disabled either via the `--disable-colors` flag or by setting `DSM_LOG_STYLE` env to "never".
 
 ## Contributing
 Contributions are always welcome. You can start with any of the open [issues](https://github.com/Yakiyo/dsm/issues) to work on. For adding a new feature, please open an issue before working on it in order to discuss it. Feature commits are prefered so please open individual prs for individual features instead of doing several feature additions/changes in a single pull request. For any changes, add a changeset via `pnpm changeset` if its applicable. 
