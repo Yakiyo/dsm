@@ -70,7 +70,7 @@ clap() {
 filename() {
   if [ "$OS" = "linux" ]; then
     case "$(uname -m)" in
-      aarch64 | arm | armv7*)
+      arm | armv7*)
         FILENAME="arm-unknown-linux-gnueabihf"
         ;;
       *)
