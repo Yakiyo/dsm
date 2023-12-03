@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "tamasfe.even-better-toml",
+        "serayuzgur.crates",
+        "rome.rome",
+        "rust-lang.rust-analyzer"
+    ]
+}
