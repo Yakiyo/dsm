@@ -2,9 +2,6 @@
 [![ci](https://github.com/Yakiyo/dsm/actions/workflows/ci.yml/badge.svg)](https://github.com/Yakiyo/dsm)
 
 Simplified version manager for the Dart SDK. Inspired by [fnm](https://github.com/Schniz/fnm) and [nvm](https://github.com/nvm-sh/nvm). 
-<div align="center">
-  <img src="./tools/dsm.svg" alt="demo svg">
-</div>
 
 ## Installation
 To quickly install dsm, you can use one of the following scripts
