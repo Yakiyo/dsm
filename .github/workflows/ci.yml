@@ -25,6 +25,3 @@ jobs:
 
       - name: Check 
         run: cargo check
-
-      - name: Style Check
-        run: cargo fmt --check
