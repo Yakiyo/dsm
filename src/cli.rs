@@ -1,5 +1,5 @@
+use crate::log_level::LogLevel;
 use clap::{ArgAction, Parser, Subcommand};
-use log::LevelFilter;
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
@@ -19,16 +19,16 @@ pub struct Cli {
         long = "log-level", 
         default_value = "error",
         env = "DSM_LOG",
-        value_parser = ["off", "error", "warn", "info", "debug", "trace"],
+        // value_parser = ["error", "warn", "info", "debug", "trace"],
         hide_env(true),
         hide_default_value(true),
         hide_possible_values(true),
     )]
-    pub log_level: LevelFilter,
+    pub log_level: LogLevel,
 
     /// Print version
     #[arg(long, short, action = ArgAction::Version)]
-    pub version: bool,
+    pub version: Option<bool>,
 
     #[command(subcommand)]
     pub subcommand: Commands,
