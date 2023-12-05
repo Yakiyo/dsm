@@ -19,7 +19,6 @@ pub struct Cli {
         long = "log-level", 
         default_value = "error",
         env = "DSM_LOG",
-        // value_parser = ["error", "warn", "info", "debug", "trace"],
         hide_env(true),
         hide_default_value(true),
         hide_possible_values(true),
