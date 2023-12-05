@@ -1,4 +1,5 @@
 use crate::log_level::LogLevel;
+use crate::util;
 use clap::{ArgAction, Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -16,12 +17,12 @@ pub struct Cli {
 
     /// Set log verbosity
     #[arg(
-        long = "log-level", 
+        long = "log-level",
         default_value = "error",
         env = "DSM_LOG",
         hide_env(true),
         hide_default_value(true),
-        hide_possible_values(true),
+        hide_possible_values(true)
     )]
     pub log_level: LogLevel,
 
@@ -37,4 +38,13 @@ pub struct Cli {
 pub enum Commands {
     Install,
     Uninstall,
+}
+
+impl Cli {
+    pub fn _get_config(&self) {
+        let _config_path = match &self.config {
+            Some(t) => t.clone(),
+            None => util::default_config_path(),
+        };
+    }
 }

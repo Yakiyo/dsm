@@ -5,6 +5,7 @@ use yansi::Paint;
 
 mod cli;
 mod log_level;
+mod util;
 
 fn main() {
     use cli::Cli;
