@@ -1,4 +1,3 @@
-use crate::log_level::LogLevel;
 use crate::util;
 use clap::{ArgAction, Parser, Subcommand};
 use std::path::PathBuf;
@@ -24,7 +23,7 @@ pub struct Cli {
         hide_default_value(true),
         hide_possible_values(true)
     )]
-    pub log_level: LogLevel,
+    pub log_level: log::LevelFilter,
 
     /// Print version
     #[arg(long, short, action = ArgAction::Version)]

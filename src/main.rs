@@ -4,7 +4,6 @@ use env_logger as logger;
 use yansi::Paint;
 
 mod cli;
-mod log_level;
 mod util;
 
 fn main() {
