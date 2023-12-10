@@ -1,13 +1,14 @@
 use atty::Stream;
 use clap::Parser;
+use cli::Cli;
 use env_logger as logger;
+use std::process;
 use yansi::Paint;
 
 mod cli;
 mod util;
 
 fn main() {
-    use cli::Cli;
     let args = Cli::parse();
 
     // configure log level
@@ -22,6 +23,13 @@ fn main() {
         log::info!("disabling colors in output");
         Paint::disable();
     }
+    if let Err(e) = run(args) {
+        eprintln!("{e}");
+        process::exit(1);
+    }
+}
 
-    println!("Hello World");
+fn run(args: Cli) -> anyhow::Result<()> {
+    let _config = args.get_config()?;
+    Ok(())
 }

@@ -1,4 +1,5 @@
 use crate::util;
+use anyhow::bail;
 use clap::{ArgAction, Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -40,10 +41,22 @@ pub enum Commands {
 }
 
 impl Cli {
-    pub fn _get_config(&self) {
-        let _config_path = match &self.config {
+    pub fn get_config(&self) -> anyhow::Result<()> {
+        let config_path = match &self.config {
             Some(t) => t.clone(),
             None => util::default_config_path(),
         };
+        // if we are searching for config in the default location
+        // or one provided by user
+        let is_default = self.config.is_some();
+        // if path was implicitly specified but does not exist, return error
+        // if we are using default location, then don't show err when not found
+        if !is_default && !config_path.exists() {
+            bail!(
+                "Config file does not exist in specified path: {}",
+                config_path.display()
+            );
+        }
+        Ok(())
     }
 }
