@@ -23,6 +23,7 @@ log = "0.4.19"
 env_logger = "0.10.0"
 atty = "0.2.14"
 toml = "0.8.8"
+serde = { version = "1.0.193", features = ["derive"] }
 
 [target.'cfg(windows)'.dependencies]
 junction = '1.0.0'

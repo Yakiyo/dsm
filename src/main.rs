@@ -7,6 +7,8 @@ use yansi::Paint;
 
 mod cli;
 mod util;
+mod config;
+mod arch;
 
 fn main() {
     let args = Cli::parse();
