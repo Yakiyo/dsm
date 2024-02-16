@@ -1,5 +1,11 @@
 # dsm
 
+## 1.0.2
+
+### Patch Changes
+
+- aa9d43b: use macos for platform name in url schemes
+
 ## 1.0.1
 
 ### Patch Changes
