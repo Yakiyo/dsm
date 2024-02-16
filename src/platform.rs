@@ -15,5 +15,5 @@ pub fn platform_name() -> &'static str {
 
 #[cfg(target_os = "macos")]
 pub fn platform_name() -> &'static str {
-    "darwin"
+    "macos"
 }

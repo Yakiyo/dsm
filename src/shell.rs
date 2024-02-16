@@ -23,7 +23,7 @@ pub enum Shell {
 impl Default for Shell {
     fn default() -> Self {
         match platform_name() {
-            "linux" | "darwin" => Self::Bash,
+            "linux" | "macos" => Self::Bash,
             "windows" => Self::Powershell,
             platform => {
                 error!("Unknown platform {platform} received");
