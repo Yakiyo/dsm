@@ -9,7 +9,7 @@ pub struct Completions {
 }
 
 impl super::Command for Completions {
-    fn run(self, _: crate::cli::DsmConfig) -> anyhow::Result<()> {
+    fn run(self, _: crate::config::Config) -> anyhow::Result<()> {
         let mut app: clap::builder::Command = Cli::command();
         let mut stdio = std::io::stdout();
         let mut gen = move |sh: Sh| generate(sh, &mut app, "dsm", &mut stdio);

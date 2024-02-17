@@ -1,9 +1,9 @@
-use crate::dirs::DsmDir;
+use crate::config::EnsurePath;
 use crate::fs::symlink_dir;
 use anyhow::Context;
 use dart_semver::Version;
 use std::collections::HashMap;
-use std::path::Path;
+use std::path;
 
 /// Represents an alias with name `name` pointing to `version`
 #[derive(Debug)]
@@ -42,7 +42,7 @@ impl std::convert::TryInto<Alias> for &std::path::Path {
 }
 
 /// List all aliases
-pub fn list_aliases<P: AsRef<Path>>(alias_dir: P) -> anyhow::Result<Vec<Alias>> {
+pub fn list_aliases<P: AsRef<path::Path>>(alias_dir: P) -> anyhow::Result<Vec<Alias>> {
     let alias_dir = alias_dir.as_ref();
     let aliases: Vec<Alias> = std::fs::read_dir(alias_dir)?
         .filter_map(Result::ok)
@@ -52,13 +52,18 @@ pub fn list_aliases<P: AsRef<Path>>(alias_dir: P) -> anyhow::Result<Vec<Alias>> 
 }
 
 /// Create an alias to a version
-pub fn create_alias(dirs: &DsmDir, version: &Version, name: &str) -> anyhow::Result<Alias> {
-    dirs.ensure_dirs()?;
-    let version_dir = dirs.find_version_dir(version);
+pub fn create_alias(
+    alias_dir: path::PathBuf,
+    version_dir: path::PathBuf,
+    version: &Version,
+    name: &str,
+) -> anyhow::Result<Alias> {
+    alias_dir.ensure_path()?;
+    let version_dir = version_dir.join(version.to_str());
     if !version_dir.exists() {
         return Err(anyhow::anyhow!("Version v{version} is not installed"));
     }
-    let alias_dir = dirs.aliases.join(name);
+    let alias_dir = alias_dir.join(name);
 
     if alias_dir.exists() {
         std::fs::remove_dir_all(&alias_dir)?;
@@ -71,7 +76,7 @@ pub fn create_alias(dirs: &DsmDir, version: &Version, name: &str) -> anyhow::Res
 }
 
 /// Generate hashmap of aliases
-pub fn create_alias_hash<P: AsRef<Path>>(
+pub fn create_alias_hash<P: AsRef<path::Path>>(
     alias_dir: P,
 ) -> anyhow::Result<HashMap<String, Vec<String>>> {
     let mut aliases = list_aliases(alias_dir.as_ref())?;

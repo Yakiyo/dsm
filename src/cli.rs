@@ -1,7 +1,5 @@
-use crate::arch::{platform_arch, Arch, SUPPORTED_ARCHS};
-use crate::commands;
-use crate::commands::Command;
-use crate::dirs::DsmDir;
+use crate::commands::{self, Command};
+use crate::config::Config;
 use clap::{Parser, Subcommand};
 
 /// A fast and simple version manager for the Dart SDK
@@ -9,47 +7,11 @@ use clap::{Parser, Subcommand};
 #[clap(version, about)]
 pub struct Cli {
     #[clap(flatten)]
-    pub config: DsmConfig,
+    pub config: Config,
 
     /// Subcommand
     #[clap(subcommand)]
     pub subcommand: SubCommand,
-}
-
-#[derive(Parser, Debug)]
-pub struct DsmConfig {
-    /// The architecture to use. Defaults to the system arch.
-    #[clap(
-        long,
-        env = "DSM_ARCH",
-        default_value = platform_arch(),
-        global = true,
-        hide_env_values = true,
-        hide_default_value = true,
-        possible_values = SUPPORTED_ARCHS
-    )]
-    pub arch: Arch,
-
-    /// Dsm directory. Defaults to `~/.dsm`
-    #[clap(
-        long = "dsm-dir",
-        env = "DSM_DIR",
-        global = true,
-        value_name = "DSM_DIR",
-        default_value = "~",
-        hide_default_value = true,
-        hide_env_values = true
-    )]
-    pub base_dir: DsmDir,
-
-    /// Disable colors in output
-    #[clap(
-        long = "no-colors",
-        env = "DSM_COLORS",
-        global = true,
-        hide_env_values = true
-    )]
-    pub disable_colors: bool,
 }
 
 #[derive(Subcommand, Debug)]
@@ -69,6 +31,10 @@ pub enum SubCommand {
     /// List all installed versions
     #[clap(name = "list", visible_aliases = &["ls"])]
     List(commands::list::List),
+
+    /// List all available versions
+    #[clap(name = "list-remote", visible_aliases = &["ls-remote"])]
+    ListRemote(commands::list_remote::ListRemote),
 
     /// Print required environment variables for dsm
     #[clap(name = "env")]
@@ -108,6 +74,7 @@ impl Cli {
             SubCommand::Unlias(e) => e.handle(self.config),
             SubCommand::SelfSub(e) => e.handle(self.config),
             SubCommand::Completions(e) => e.handle(self.config),
+            SubCommand::ListRemote(e) => e.handle(self.config),
         }
     }
 }

@@ -44,7 +44,7 @@ pub fn platform_arch() -> &'static str {
 /// All supported archs. This are the ones dart binaries are built for.
 pub const SUPPORTED_ARCHS: &[&str; 4] = &["arm", "arm64", "x64", "ia32"];
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Arch {
     X64,
     Arm64,
@@ -82,5 +82,25 @@ impl std::str::FromStr for Arch {
 impl std::fmt::Display for Arch {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.to_str())
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use std::str::FromStr;
+
+    #[test]
+    fn test_arch_from_str() {
+        assert_eq!(Arch::from_str("x64").unwrap(), Arch::X64);
+    }
+
+    #[test]
+    fn test_arch_err() {
+        assert!(Arch::from_str("bjbjka").is_err());
+    }
+    #[test]
+    fn test_arch_to_str() {
+        assert_eq!(Arch::X64.to_str(), "x64");
     }
 }

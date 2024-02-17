@@ -7,3 +7,4 @@ vscode:
     - bungcip.better-toml
     - serayuzgur.crates
     - rome.rome
+    - rust-lang.rust-analyzer

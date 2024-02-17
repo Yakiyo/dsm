@@ -7,7 +7,7 @@ edition = '2021'
 license = 'MIT'
 repository = 'https://github.com/Yakiyo/dsm'
 homepage = 'https://github.com/Yakiyo/dsm'
-exclude = ['.devcontainer/**', '.github/**', '.vscode/**', 'tests/**', '.gitignore', 'tools/**', 'site/**']
+exclude = ['.devcontainer/**', '.github/**', '.vscode/**', 'tests/**', '.gitignore', 'tools/**', 'site/**', 'pkg/**']
 
 [dependencies]
 clap = { version = '3.2.25', features = ['derive', 'env'] }
@@ -21,6 +21,9 @@ zip = '0.6.5'
 serde_json = "1.0.99"
 clap_complete = "3.2.5"
 home = "0.5.5"
+indicatif = "0.17.5"
+log = "0.4.19"
+env_logger = "0.10.0"
 
 [target.'cfg(windows)'.dependencies]
 junction = '1.0.0'

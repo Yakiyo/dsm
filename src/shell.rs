@@ -1,4 +1,3 @@
-use crate::error;
 use crate::platform::platform_name;
 use anyhow::Context;
 use std::collections::HashMap;
@@ -26,7 +25,8 @@ impl Default for Shell {
             "linux" | "macos" => Self::Bash,
             "windows" => Self::Powershell,
             platform => {
-                error!("Unknown platform {platform} received");
+                log::error!("Unknown platform {platform} received");
+                std::process::exit(1);
             }
         }
     }
@@ -78,12 +78,15 @@ impl std::fmt::Display for Shell {
 impl Shell {
     /// Add current installation dir to path
     pub fn path(&self, bin_dir: &PathBuf) -> anyhow::Result<String> {
+        let bin = bin_dir
+            .to_str()
+            .context("Unable to convert bin dir path to str")?;
         let s = match self {
             Shell::Bash | Shell::Zsh => {
-                format!("export PATH={:?}:$PATH", bin_dir.display())
+                format!("export PATH={bin:?}:$PATH")
             }
             Shell::Fish => {
-                format!("set -gx PATH {:?} $PATH", bin_dir.display())
+                format!("set -gx PATH {bin:?} $PATH")
             }
             Shell::Powershell => {
                 let current_path =
@@ -116,28 +119,55 @@ impl Shell {
     }
 
     /// Print environment variables
-    pub fn env_vars(&self, vars: &HashMap<&str, String>) {
+    pub fn env_vars(&self, vars: &HashMap<&str, String>) -> String {
+        let mut res = Vec::new();
         match self {
             Shell::Bash | Shell::Zsh => {
                 for (name, value) in vars {
-                    println!("export {name}={value}");
+                    res.push(format!("export {name}={value:?}"));
                 }
             }
             Shell::Fish => {
                 for (name, value) in vars {
-                    println!("set -gx {name} {value};");
+                    res.push(format!("set -gx {name} {value:?};"));
                 }
             }
             Shell::Powershell => {
                 for (name, value) in vars {
-                    println!("$env:{name} = \"{value}\"");
+                    res.push(format!("$env:{name} = \"{value}\""));
                 }
             }
             Shell::Cmd => {
                 for (name, value) in vars {
-                    println!("SET {name}={value}");
+                    res.push(format!("SET {name}={value}"));
                 }
             }
         }
+        res.join("\n")
     }
+}
+
+#[cfg(not(windows))]
+pub fn fix_path(p: &str) -> String {
+    p.to_string()
+}
+
+/// Use `cygpath` to convert windows like paths to unix ones
+/// As in, convert `C:\\Users\\User\\bin` to `C:/Users/User/bin`
+#[cfg(windows)]
+pub fn fix_path(p: &str) -> String {
+    use std::process::Command;
+
+    let out = Command::new("cygpath").args(["-u", p]).output().ok();
+
+    if out.is_none() {
+        return p.to_string();
+    }
+
+    let out = out.unwrap();
+
+    if !out.status.success() {
+        return p.to_string();
+    }
+    return String::from_utf8(out.stdout).unwrap_or(p.to_string());
 }

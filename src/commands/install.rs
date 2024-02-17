@@ -1,12 +1,14 @@
 use crate::arch::Arch;
-use crate::cli::DsmConfig;
-use crate::debug;
+use crate::config::{Config, EnsurePath};
 use crate::http::fetch_bytes;
 use crate::platform::platform_name;
 use crate::user_version::UserVersion;
 use anyhow::Context;
 use dart_semver::Version;
+use indicatif::{ProgressBar, ProgressStyle};
+use std::fs::File;
 use std::io::Write;
+use std::path::Path;
 use yansi::Paint;
 use zip::read::ZipArchive;
 
@@ -17,7 +19,7 @@ pub struct Install {
 }
 
 impl super::Command for Install {
-    fn run(self, config: DsmConfig) -> anyhow::Result<()> {
+    fn run(self, config: Config) -> anyhow::Result<()> {
         let version = match self.version {
             UserVersion::Version(v) => v,
             UserVersion::Alias(_) => {
@@ -25,38 +27,25 @@ impl super::Command for Install {
             }
             UserVersion::Latest(c) => UserVersion::resolve_latest(&c)?,
         };
-        let dir = &config.base_dir;
 
-        dir.ensure_dirs()
+        config
+            .installation_dir()
+            .ensure_path()
             .with_context(|| "Failed to setup dsm dirs")?;
 
         install_dart_sdk(&version, &config)?;
         println!(
             "Successfully installed Dart SDK {}",
-            Paint::green(format!("{}", &self.version))
+            Paint::green(format!("v{}", version))
         );
-        // let default_alias = &config.base_dir.aliases.join("default");
-        // if !default_alias.exists() {
-        //     debug!(
-        //         "Missing default alias. Assigning {} as default",
-        //         &self.version
-        //     );
-        //     crate::alias::create_alias(dir, &version, "default")?;
-        // }
 
-        // If input was a latest-* patter, then create an associated alias to that
-        // version with that name
-        if let UserVersion::Latest(c) = self.version {
-            debug!("Creating alias for latest-{c}");
-            crate::alias::create_alias(dir, &version, format!("latest-{c}").as_str())?;
-        }
         Ok(())
     }
 }
 
 /// Install dart sdk
-fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()> {
-    let p = config.base_dir.find_version_dir(version);
+fn install_dart_sdk(version: &Version, config: &Config) -> anyhow::Result<()> {
+    let p = config.installation_dir().join(version.to_str());
     if p.exists() {
         return Err(anyhow::anyhow!("Version {version} is already installed. For reinstalling, please uninstall first then install again."));
     }
@@ -66,26 +55,60 @@ fn install_dart_sdk(version: &Version, config: &DsmConfig) -> anyhow::Result<()>
     let archive = fetch_bytes(archive_url(version, &config.arch))
         .with_context(|| "No Dart SDK available with provided arch type or version.")?;
 
-    println!("Extracting files");
-
     let mut tmp = tempfile::tempfile().with_context(|| "Failed to create temporary file")?;
-    let tmp_dir = tempfile::tempdir_in(&config.base_dir.installations)
+    let tmp_dir = tempfile::tempdir_in(config.installation_dir())
         .with_context(|| "Could not create tmp dir")?;
 
     tmp.write_all(&archive)
         .with_context(|| "Failed to write contents to temp file")?;
 
-    ZipArchive::new(tmp)
-        .with_context(|| "Failed to read ZipArchive")?
-        .extract(&tmp_dir)
-        .with_context(|| "Failed to extract content from zip file")?;
+    extract(&tmp, tmp_dir.path())?;
 
     std::fs::rename(tmp_dir.path().join("dart-sdk"), p)
         .with_context(|| "Failed to copy extracted files to installation dir.")?;
 
     if let Err(e) = tmp_dir.close() {
-        debug!("Could not close temp dir. Please remove it manually\n{e}");
+        log::warn!("Could not close temp dir. Please remove it manually\n{e}");
     }
+    Ok(())
+}
+
+fn extract(zipfile: &File, dest: &Path) -> anyhow::Result<()> {
+    let mut zip = ZipArchive::new(zipfile).unwrap();
+    if !dest.exists() {
+        std::fs::create_dir_all(dest)
+            .with_context(|| "Unable to create temp dir for extracting files")?;
+    }
+    let pb = ProgressBar::new(zip.len().try_into().unwrap());
+    pb.set_style(
+        ProgressStyle::with_template("[{bar:60.cyan/blue}] {pos}/{len} ({percent}%)")
+            .unwrap()
+            .progress_chars("#>-"),
+    );
+    pb.println("Extracting files");
+
+    for i in 0..zip.len() {
+        let mut file = zip.by_index(i).context("Cannot read file in archive")?;
+        let path = match file.enclosed_name() {
+            Some(p) => dest.join(p),
+            None => continue,
+        };
+        if file.name().ends_with('/') {
+            std::fs::create_dir_all(path).unwrap();
+            continue;
+        }
+        if let Some(p) = path.parent() {
+            if !p.exists() {
+                std::fs::create_dir_all(p).unwrap();
+            }
+        }
+        let mut outfile = std::fs::File::create(&path)
+            .context("Failed to create output file while extracting")?;
+        std::io::copy(&mut file, &mut outfile)
+            .context("Failed to copy file from archive to disk")?;
+        pb.inc(1);
+    }
+    pb.finish();
     Ok(())
 }
 
